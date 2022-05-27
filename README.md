@@ -1,1 +1,3 @@
-# yoder-invoice-payment-system
+# Yoder Invoice Payment System
+
+run comoser `dump-autoload` to autoload files
