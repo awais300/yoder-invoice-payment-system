@@ -1,0 +1,14 @@
+{
+  "name": "yoder/yoder-invoice-payment-system",
+  "license": "GPL-3.0",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Yoder\\YIPS\\": "src/"
+    }
+  }
+}
+
+
+
