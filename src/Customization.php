@@ -85,7 +85,7 @@ class Customization {
      * Initialize the plugin.
      */
     public function init() {
-    	new UserLogin();
+    	new UserProfileFields();
     }
 
 	/**
