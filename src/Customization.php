@@ -85,6 +85,7 @@ class Customization {
      * Initialize the plugin.
      */
     public function init() {
+    	new WPLogger();
     	new UserProfileFields();
     	new UserLogin();
     }
