@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 class UserRoles
 {
-    private const ROLE_YODER_INVOICE_CUSTOMER = 'yoder-invoice-customer';
+    public const ROLE_YODER_INVOICE_CUSTOMER = 'yoder-invoice-customer';
     
     public static function add_role() {
         remove_role(self::ROLE_YODER_INVOICE_CUSTOMER);
