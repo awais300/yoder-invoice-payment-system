@@ -86,6 +86,7 @@ class Customization {
      */
     public function init() {
     	new UserProfileFields();
+    	new UserLogin();
     }
 
 	/**
