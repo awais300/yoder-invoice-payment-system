@@ -54,7 +54,7 @@ class UserProfileFields
             return false;
         }
 
-        update_user_meta($user_id, self::META_CUSTOMER_SAGE_FIELD, $_POST[self::META_CUSTOMER_SAGE_FIELD]);
+        update_user_meta($user_id, self::META_CUSTOMER_SAGE_FIELD, sanitize_text_field($_POST[self::META_CUSTOMER_SAGE_FIELD]));
     }
 
     public function yoder_wp_new_user_notification_email($new_user_email, $user, $blogname)
