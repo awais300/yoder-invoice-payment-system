@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 
 class WPLogger
 {
-    // Try to use the same name as plguin's slug name
+    // Try to use the same name for log dir as plguin's slug name
     private const LOG_DIRECTORY_NAME = 'yoder-invoice-payment-system';
     private const DEFAULT_LOG_FILE_NAME_PREFIX = 'api';
     protected static $instance = null;
