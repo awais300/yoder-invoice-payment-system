@@ -1,1 +1,184 @@
-/*CSS goes here*/
+#yoder-pay-online .ycolumn {
+    float: left;
+    width: 50%;
+}
+
+#yoder-pay-online .yrow {
+    padding: 21px 39px 22px;
+    position: relative;
+    border: 1px solid #d9d9d9;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #ffffff;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    margin-bottom: 10px;
+}
+
+#yoder-pay-online .fa-map-marker {
+    font-size: 37px;
+    margin-right: 10px;
+    color: #212c64;
+    margin-top: -5px;
+}
+
+#yoder-pay-online .ybold {
+    font-size: 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 7px 0 0;
+    line-height: 24px;
+}
+
+#yoder-pay-online p {
+    color: #000;
+    display: block;
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    margin: 0 0 5px 0;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 14px;
+}
+
+#yoder-pay-online .yrow:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#yoder-pay-online .ycolumn {
+    float: left;
+}
+
+#yoder-pay-online .left {
+    width: 45%;
+}
+
+#yoder-pay-online.right {
+    width: 55%;
+}
+
+#yoder-pay-online .right-content {
+    display: flex;
+}
+
+#yoder-pay-online .ytable {
+    margin: 30px 0 0;
+    padding: 15px 40px;
+    position: relative;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #f2f2f2;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+#yoder-pay-online .ytable h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+}
+
+#yoder-pay-online .table-info {
+    margin-bottom: 15px;
+}
+
+#yoder-pay-online .ytable.info {}
+
+#yoder-pay-online .ytable p {
+    margin: 11px 0 0;
+    font-size: 12px;
+}
+
+#yoder-pay-online tr.heading td {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+#yoder-pay-online .table-bottom {
+    display: flex;
+    text-align: right;
+    justify-content: center;
+    align-content: center;
+    margin: 45px;
+}
+
+#yoder-pay-online .table-bottom .yfee {
+    padding: 0 25px;
+}
+
+#yoder-pay-online .table-bottom .cfee p {
+    font-size: 14px;
+}
+
+#yoder-pay-online .table-bottom .cfee span {
+    font-weight: bold;
+}
+
+#yoder-pay-online .table-bottom .fee p {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: bold;
+}
+
+#yoder-pay-online .table-bottom .fee span {
+    font-weight: bold;
+}
+
+#yoder-pay-online .button-submit {
+    background: #ca1631;
+    color: #ffffff;
+    box-shadow: none;
+    text-decoration: none;
+    outline: 0;
+    margin: 8px 5px 5px 0;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.07s ease-in;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    border: 1px solid #ca1631;
+}
+
+#yoder-pay-online .button-submit:hover {
+    background: #000;
+    border: 1px solid #000;
+}
+
+@media screen and (max-width: 600px) {
+    #yoder-pay-online .ycolumn {
+        width: 100%;
+        display: block;
+        margin: 0 0 35px 0;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #yoder-pay-online .table-bottom {
+        display: block;
+        line-height: inherit;
+    }
+
+    #yoder-pay-online .button-submit {
+        line-height: inherit;
+    }
+
+    #yoder-pay-online .table-bottom .yfee {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 484px) {
+    #yoder-pay-online .button-submit {
+        font-size: 12px;
+    }
+}
