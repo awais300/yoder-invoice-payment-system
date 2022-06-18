@@ -96,6 +96,7 @@ class Customization {
      */
 	public function enqueue_styles() {
 		wp_enqueue_style('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/yips-customization-frontend.css', array(), null, 'all');
+		wp_enqueue_style('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/w3.css', array(), null, 'all');
 	}
 
 
