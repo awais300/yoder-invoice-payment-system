@@ -88,6 +88,7 @@ class Customization {
     	new WPLogger();
     	new UserProfileFields();
     	new UserLogin();
+    	new Invoice();
     }
 
 	/**
