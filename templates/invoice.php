@@ -1,4 +1,4 @@
-<div id="title">
+<div id="title" style="display: none;">
     <div class="container">
         <div class="ten columns">
             <h1><?php the_title(); ?></h1>
