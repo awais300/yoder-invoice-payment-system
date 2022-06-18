@@ -1,6 +1,7 @@
 <?php
 
 namespace Yoder\YIPS;
+use Omnipay\Omnipay;
 
 defined('ABSPATH') || exit;
 
@@ -12,13 +13,17 @@ defined('ABSPATH') || exit;
 class UserLogin
 {
 
-    private const CUSTOMER_INVOICE_PAGE = 'pay-invoice';
+    private const CUSTOMER_INVOICE_PAGE = 'pay-online';
     public const FROM_EMAIL = 'no-reply@yoderoil.com';
+    private $logger = null;
 
     public function __construct()
     {
+
+        $this->logger = WPLogger::get_instance();
         add_action('wp_head', array($this, 'yoder_hide_rememeberme'));
-        add_action('template_redirect', array($this, 'yoder_template_redirect'));
+        //add_action('template_redirect', array($this, 'yoder_template_redirect'));
+        //add_action('template_redirect', array($this, 'test'));
         add_filter('login_redirect', array($this, 'yoder_login_redirect'), 10, 3);
         add_filter('retrieve_password_message', array($this, 'yoder_retrieve_password_message'), 10, 4);
         add_filter('retrieve_password_notification_email', array($this, 'yoder_retrieve_password_notification_email'), 10, 4);
@@ -81,7 +86,7 @@ class UserLogin
         /* translators: %s: site name */
         $message .= sprintf(__('Site Name: %s'), $site_name) . "<br/>";
         /* translators: %s: user login */
-        $message .= sprintf(__('Username: %s'), $user->user_email ) . "<br/>";
+        $message .= sprintf(__('Username: %s'), $user->user_email) . "<br/>";
         $message .= __('If this was a mistake, just ignore this email and nothing will happen.') . "<br/>";
         $message .= __('To reset your password, visit the following address:') . "<br/>";
         //$message .= '<' . network_site_url("{$reset_page}?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . ">\r\n";
@@ -109,5 +114,29 @@ class UserLogin
             $page = 'resetpass';
         }
         return $page;
+    }
+
+    public function test()
+    {
+        $ccGateway = Omnipay::create('Paytrace_CreditCard');
+        $ccGateway->setUserName('awais@effectwebagency.com')
+            ->setPassword('flummox@123')
+            ->setTestMode(true);
+
+        //$settings = $ccGateway->getDefaultParameters();
+
+        $creditCardData = ['number' => '4242424242424242', 'expiryMonth' => '6', 'expiryYear' => '2023', 'cvv' => '123', 'customer_id'=> 'p444', 'firstName' => 'Shilpa'];
+        $response = $ccGateway->purchase(['amount' => '2100.00', 'currency' => 'USD', 'card' => $creditCardData])->send();
+
+        if ($response->isSuccessful()) {
+            $this->logger->log('success');
+            $this->logger->log($response);
+            echo $response->getMessage();
+        } else {
+            $this->logger->log('fail');
+            $this->logger->log($response);
+            echo $response->getMessage();
+        }
+        exit('end');
     }
 }
