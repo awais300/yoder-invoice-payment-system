@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<div class="invoice-page">
+<div id="yoder-pay-online" class="invoice-page">
     <div class="yrow">
         <div class="ycolumn left">
             <p>Account# <span>2548796</span></p>
@@ -37,32 +37,34 @@
                     <td>Invoice nr.</td>
                     <td>Amount Due</td>
                 </tr>
-                <tr>
-                    <td><input type="checkbox" name="invoice[]" class="invoice"></td>
+                <tr class="table-data">
+                    <td><input class="invoice-box" type="checkbox" name="invoice[]" class="invoice"></td>
                     <td>#222</td>
-                    <td>$800</td>
+                    <td>800.29</td>
                 </tr>
-                <tr>
-                    <td><input type="checkbox" name="invoice[]" class="invoice"></td>
+                <tr class="table-data">
+                    <td><input class="invoice-box" type="checkbox" name="invoice[]" class="invoice"></td>
                     <td>#225</td>
-                    <td>$250</td>
+                    <td>250</td>
                 </tr>
-                <tr>
-                    <td><input type="checkbox" name="invoice[]" class="invoice"></td>
+                <tr class="table-data">
+                    <td><input class="invoice-box" type="checkbox" name="invoice[]" class="invoice"></td>
                     <td>#226</td>
-                    <td>$900</td>
+                    <td>900</td>
                 </tr>
             </table>
 
             <div class="table-bottom">
                 <div class="bottom-content">
-                    <div class="cfee yfee">
-                        <p>3% Convenience Fee: <span>$17.97</span></p>
+                    <div id="cfee" class="cfee yfee">
+                        <p>3% Convenience Fee: <span>0</span></p>
                     </div>
-                    <div class="fee yfee">
-                        <p>Total: <span>$616.83</span></p>
+                    <div id="total-fee" class="fee yfee">
+                        <p>Total: <span>0</span></p>
                     </div>
                 </div>
+                <input id="total_fee" name="total_fee" type="hidden" value="0" />
+                <input id="convenience_fee" name="convenience_fee" type="hidden" value="0" />
                 <div class="ybutton">
                     <button type="submit" class="button-submit">Pay Selected Invoice(s)</button>
                 </div>
