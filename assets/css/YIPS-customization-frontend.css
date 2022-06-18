@@ -154,6 +154,16 @@
     border: 1px solid #000;
 }
 
+#yoder-pay-online tr.table-data td:nth-child(3)::before {
+    content: "$";
+}
+#yoder-pay-online .table-bottom .cfee p span::before {
+    content: "$";
+}
+
+#yoder-pay-online .table-bottom .fee p span::before {content: "$";
+}
+
 @media screen and (max-width: 600px) {
     #yoder-pay-online .ycolumn {
         width: 100%;
