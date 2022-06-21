@@ -25,12 +25,15 @@ jQuery(document).ready(function($) {
 
         // Total fee
         total = total.toFixed(2);
-        $('#yoder-pay-online .fee span').text(total);
-        $('#yoder-pay-online #total_fee').val(total);
 
-        // Convenience fee 
+        // Convenience fee (3% of total)
         cfee = 0.03 * total;
         cfee = cfee.toFixed(2);
+
+        total_fee = Number(total) + Number(cfee);
+
+        $('#yoder-pay-online .fee span').text(total_fee);
+        $('#yoder-pay-online #total_fee').val(total_fee);
 
         $('#yoder-pay-online .cfee span').text(cfee);
         $('#yoder-pay-online #convenience_fee').val(cfee);
