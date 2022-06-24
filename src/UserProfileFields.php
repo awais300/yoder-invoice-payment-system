@@ -59,6 +59,12 @@ class UserProfileFields
 
     public function yoder_wp_new_user_notification_email($new_user_email, $user, $blogname)
     {
+        if (is_a($user, 'WP_User') && $user->exists()) {
+            if (!in_array(UserRoles::ROLE_YODER_INVOICE_CUSTOMER, (array) $user->roles)) {
+                return $new_user_email;
+            }
+        }
+        
         $message  = sprintf( __( 'Username: %s' ), $user->user_email ) . "<br/><br/>";
         $message .= __( 'To set your password, visit the following address:' ) . "<br/><br/>";
         $message .= network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) . "<br/><br/>";
