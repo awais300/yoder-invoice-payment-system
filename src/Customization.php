@@ -2,6 +2,9 @@
 
 namespace Yoder\YIPS;
 
+use Yoder\YIPS\PayTrace\ApiSettings;
+use Yoder\YIPS\PayTrace\Utilities;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -61,6 +64,7 @@ class Customization {
 		$this->define( 'YIPS_CUST_PLUGIN_BASENAME', plugin_basename( YIPS_CUST_PLUGIN_FILE ) );
 		$this->define( 'YIPS_CUST_PLUGIN_DIR_PATH', untrailingslashit( plugin_dir_path( YIPS_CUST_PLUGIN_FILE ) ) );
 		$this->define( 'YIPS_CUST_PLUGIN_DIR_URL', untrailingslashit( plugins_url( '/', YIPS_CUST_PLUGIN_FILE ) ) );
+		$this->define( 'YIPS_PAYTRACE_DIR_PATH', untrailingslashit( plugin_dir_path( YIPS_CUST_PLUGIN_FILE ) ) . '/src/PayTrace' );
 	}
 
 	/**
@@ -85,7 +89,7 @@ class Customization {
      * Initialize the plugin.
      */
     public function init() {
-    	new WPLogger();
+    	new ApiSettings();
     	new UserProfileFields();
     	new UserLogin();
     	new Invoice();
@@ -104,6 +108,7 @@ class Customization {
      * Enqueue all scripts.
      */
 	public function enqueue_scripts() {
+		wp_enqueue_script( 'yips-customization-frontend-paytrace-protect', YIPS_CUST_PLUGIN_DIR_URL . '/assets/js/protect.js');
 		wp_enqueue_script( 'yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/js/yips-customization-frontend.js', array( 'jquery' ) );
 	}
 
