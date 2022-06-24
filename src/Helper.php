@@ -146,9 +146,30 @@ class Helper
         );
     }
 
-    public static function xmlToJson($xml, $options = array()) {
+    public static function xmlToJson($xml, $options = array())
+    {
         $xml_to_array = self::xmlToArray($xml, $options);
         $xml_to_json = json_encode($xml_to_array);
         return $xml_to_json;
+    }
+
+    //function to decode the Json response.
+    public static function jsonDecode($json_string)
+    {
+        //Decode the Json Response.
+        if (empty($json_string)) {
+            return null;
+        } else {
+            $json = json_decode($json_string, true);
+        }
+        return $json;
+    }
+
+    //function to encode the string into Json
+    public static function jsonEncode($json_string)
+    {
+        //Encode the Json Response.
+        $json = json_encode($json_string);
+        return $json;
     }
 }
