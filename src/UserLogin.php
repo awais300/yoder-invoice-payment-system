@@ -1,7 +1,6 @@
 <?php
 
 namespace Yoder\YIPS;
-use Omnipay\Omnipay;
 
 defined('ABSPATH') || exit;
 
@@ -114,29 +113,5 @@ class UserLogin
             $page = 'resetpass';
         }
         return $page;
-    }
-
-    public function test()
-    {
-        $ccGateway = Omnipay::create('Paytrace_CreditCard');
-        $ccGateway->setUserName('awais@effectwebagency.com')
-            ->setPassword('flummox@123')
-            ->setTestMode(true);
-
-        //$settings = $ccGateway->getDefaultParameters();
-
-        $creditCardData = ['number' => '4242424242424242', 'expiryMonth' => '6', 'expiryYear' => '2023', 'cvv' => '123', 'customer_id'=> 'p444', 'firstName' => 'Shilpa'];
-        $response = $ccGateway->purchase(['amount' => '2100.00', 'currency' => 'USD', 'card' => $creditCardData])->send();
-
-        if ($response->isSuccessful()) {
-            $this->logger->log('success');
-            $this->logger->log($response);
-            echo $response->getMessage();
-        } else {
-            $this->logger->log('fail');
-            $this->logger->log($response);
-            echo $response->getMessage();
-        }
-        exit('end');
     }
 }
