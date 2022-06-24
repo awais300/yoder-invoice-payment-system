@@ -2,6 +2,7 @@
 
 namespace Yoder\YIPS;
 
+
 defined('ABSPATH') || exit;
 
 /**
@@ -9,22 +10,12 @@ defined('ABSPATH') || exit;
  * @package Yoder\YIPS
  */
 
-class WPLogger
+class WPLogger extends Singleton
 {
     // Try to use the same name for log dir as plguin's slug name
     private const LOG_DIRECTORY_NAME = 'yoder-invoice-payment-system';
     private const DEFAULT_LOG_FILE_NAME_PREFIX = 'api';
-    protected static $instance = null;
     private $debug = true;
-
-
-    public static function get_instance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
 
     public function disable_logging(bool $debug = false)
     {
