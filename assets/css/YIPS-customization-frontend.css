@@ -4,17 +4,11 @@
 }
 
 #yoder-pay-online .yrow {
-    padding: 21px 39px 22px;
+    padding: 22px;
     position: relative;
     border: 1px solid #d9d9d9;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
     background: #ffffff;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    margin-bottom: 10px;
 }
 
 #yoder-pay-online .fa-map-marker {
@@ -63,6 +57,8 @@
 
 #yoder-pay-online .right-content {
     display: flex;
+    position: relative;
+    top: 8px;
 }
 
 #yoder-pay-online .ytable {
@@ -92,7 +88,20 @@
 
 #yoder-pay-online .ytable p {
     margin: 11px 0 0;
-    font-size: 12px;
+    font-size: 14px;
+}
+
+#yoder-pay-online table {
+    width: 100%;
+}
+
+#yoder-pay-online table td:first-child {
+    padding: 8px 0px !important;
+    width: 25px;
+}
+
+#yoder-pay-online table td:not(:first-child) {
+    padding: 8px 0px !important;
 }
 
 #yoder-pay-online tr.heading td {
@@ -136,17 +145,15 @@
     box-shadow: none;
     text-decoration: none;
     outline: 0;
-    margin: 8px 5px 5px 0;
-    font-weight: bold;
     display: inline-block;
     transition: all 0.07s ease-in;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
-    line-height: 50px;
+    line-height: 13px;
     text-align: center;
-    text-transform: uppercase;
     border: 1px solid #ca1631;
+    padding: 12px 20px 12px 20px;
 }
 
 #yoder-pay-online .button-submit:hover {
@@ -157,12 +164,79 @@
 #yoder-pay-online tr.table-data td:nth-child(3)::before {
     content: "$";
 }
+
 #yoder-pay-online .table-bottom .cfee p span::before {
     content: "$";
 }
 
-#yoder-pay-online .table-bottom .fee p span::before {content: "$";
+#yoder-pay-online .table-bottom .fee p span::before {
+    content: "$";
 }
+
+input[type=checkbox] {
+    position: relative;
+    width: 21px;
+    height: 1.5em;
+    color: #363839;
+    border: 1px solid #bdc1c6;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 3px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: 0;
+    cursor: pointer;
+    transition: background 175ms cubic-bezier(0.1, 0.1, 0.25, 1);
+    margin-left: 3px;
+    top: 4px;
+    margin-right: 9px;
+    background-color: #fff;
+}
+
+input[type=checkbox]::before {
+    position: absolute;
+    content: "";
+    display: block;
+    top: 2px;
+    left: 7px;
+    width: 6px;
+    height: 11px;
+    border-style: solid;
+    border-color: #ca1631;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+}
+
+input[type=checkbox]:checked {
+    color: #fff;
+    border-color: #ca1631;
+    background: #ffffff;
+}
+
+input[type=checkbox]:checked:focus {
+    color: #fff;
+    border-color: #ca1631;
+    background: #ffffff;
+}
+
+input[type=checkbox]:checked:hover {
+    color: #fff;
+    border-color: #ca1631;
+    background: #ffffff;
+}
+
+input[type=checkbox]:checked::before {
+    opacity: 1;
+}
+
+#yoder-pay-online .paytrace-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 @media screen and (max-width: 600px) {
     #yoder-pay-online .ycolumn {
