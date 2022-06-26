@@ -2,8 +2,9 @@
 
 namespace Yoder\YIPS;
 
-use Yoder\YIPS\PayTrace\ApiSettings;
+use Yoder\YIPS\PayTrace\PayTraceSetings;
 use Yoder\YIPS\PayTrace\Utilities;
+use Yoder\YIPS\Rosetta\Rosetta;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -89,7 +90,8 @@ class Customization {
      * Initialize the plugin.
      */
     public function init() {
-    	new ApiSettings();
+    	new Rosetta();
+    	new PayTraceSetings();
     	new UserProfileFields();
     	new UserLogin();
     	new Invoice();
