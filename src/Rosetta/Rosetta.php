@@ -20,7 +20,7 @@ class Rosetta extends Singleton
         //$aa = $this->get_customer();
         
         if(isset($_GET['yoder_api_debug'])) {
-             dd($aa);
+            dd($aa);
             exit();
         }
        
@@ -40,9 +40,21 @@ class Rosetta extends Singleton
                 </dm2RosettaSettings>';*/
 
         $xml = '<rosetta>
-  <securitykey>32B32BCE9E61CD42AB89622D495B2</securitykey>
-  <function>GetOpenInvoiceData</function>
+                    <securitykey>32B32BCE9E61CD42AB89622D495B2</securitykey>
+                    <function>GetOpenInvoiceData</function>
   <xml>
+    <ExtSourceID>YODERWEB</ExtSourceID>
+    <ARDivisionNo>00</ARDivisionNo>
+    <CustomerNo>0000004</CustomerNo>
+  </xml>
+</rosetta>';
+
+
+$xml = '<rosetta>
+<securitykey>32B32BCE9E61CD42AB89622D495B2</securitykey>
+  <function>GetCustomerData</function>
+  <xml>
+    <ExtSourceID>YODERWEB</ExtSourceID>
     <ARDivisionNo>00</ARDivisionNo>
     <CustomerNo>0000004</CustomerNo>
   </xml>
@@ -54,18 +66,16 @@ class Rosetta extends Singleton
 
         $headers = array();
 
-        $url = 'https://50.240.141.89';
+        $url = 'http://50.240.141.89';
         $request_data = $xml;
-        $response = wp_remote_post(
+        $response = wp_remote_get(
             $url,
             array(
                 'method'      => 'GET',
                 'timeout'     => 45,
                 'redirection' => 5,
-                'httpversion' => '1.1',
                 'blocking'    => true,
                 'sslverify'    => false,
-                'headers'     => $headers,
                 'body'        => $request_data
             )
         );
@@ -197,4 +207,10 @@ class Rosetta extends Singleton
 
         return $result;
     }
+}
+
+function dd($mix) {
+    echo "<pre>";
+    print_r($mix);
+    echo "</pre>";
 }
