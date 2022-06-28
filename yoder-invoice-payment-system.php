@@ -23,6 +23,8 @@
 
 namespace Yoder\YIPS;
 
+use Yoder\YIPS\User\UserRoles;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
