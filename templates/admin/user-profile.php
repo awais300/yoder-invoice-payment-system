@@ -1,6 +1,8 @@
 <?php
 namespace Yoder\YIPS;
 
+use Yoder\YIPS\User\UserMeta;
+
 $value = '';
 if(is_object($user)) {
     $value = get_user_meta( $user->ID, UserMeta::META_CUSTOMER_SAGE_ID, true );
