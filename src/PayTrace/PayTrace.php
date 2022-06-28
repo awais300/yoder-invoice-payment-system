@@ -140,8 +140,8 @@ class PayTrace extends Singleton
             )
         );
 
-         // log requested data. remove senstive info.
-        $temp_request_data = $request_data;       
+        // log requested data. remove senstive info.
+        $temp_request_data = $request_data;
         unset($temp_request_data['enc_key']);
         unset($temp_request_data['HPF_Token']);
         $this->logger->log('buildRequestData()');

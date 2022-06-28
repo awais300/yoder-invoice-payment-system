@@ -1,8 +1,11 @@
 <?php
 
-namespace Yoder\YIPS;
+namespace Yoder\YIPS\Invoice;
 
 use Yoder\YIPS\PayTrace\PayTrace;
+use Yoder\YIPS\Rosetta\Rosetta;
+use Yoder\YIPS\TemplateLoader;
+use Yoder\YIPS\User\UserRoles;
 
 defined('ABSPATH') || exit;
 
@@ -38,10 +41,14 @@ class Invoice
         $client_key = (PayTrace::instance())->get_client_key();
         $payment = (PayTrace::instance())->process_payment();
 
+        $invoices = (Rosetta::instance())->get_non_paid_invoices();
+
         $data = array(
+            'invoice_obj' => $this,
             'client_key' => $client_key['client_key'],
             'payment' => $payment,
-            'thankyou_page' => self::THANK_YOU_PAGE
+            'thankyou_page' => self::THANK_YOU_PAGE,
+            'invoices' => $invoices
         );
 
         $html = $this->loader->get_template(
@@ -54,6 +61,24 @@ class Invoice
         return trim($html);
     }
 
+    public function has_error($invoices)
+    {
+        if (empty($invoices['error_message']) && empty($invoices['error_message'][0])) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function has_invoice($invoices)
+    {
+        if (!empty($invoices['invoices']) && !empty($invoices['invoices'][0])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function display_thankyou_page()
     {
         if (!$this->allowed_access()) {
@@ -61,6 +86,7 @@ class Invoice
             exit;
         }
 
+        $data = array();
         $html = $this->loader->get_template(
             'thank-you.php',
             $data,

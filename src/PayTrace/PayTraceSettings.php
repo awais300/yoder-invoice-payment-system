@@ -24,6 +24,10 @@ class PayTraceSettings
 
     public function init_settings()
     {
+        /*echo Cryptor::encrypt('awais@effectwebagency.com');
+        echo "<br/>";
+        echo Cryptor::encrypt('flummox@123');
+        exit;*/
 
         define("PAYTRACE_USERNAME", Cryptor::decrypt('c3O2OsqL078mWtnJJG9fCaP1JHOwPCRkH4B3XA0f2k+M9wAjBtIWKwjb2/GcxmAuIFJuTVJ6jkj2OlWhiIHpl8M='));
         define("PAYTRACE_PASSWORD", Cryptor::decrypt('0mI+TNKkbu+KmP30GX4mh7UJRAQ1bml6hWp9w52uLPeylqxS97SVQG9YwFuKXcSdgs6v')); //pvc

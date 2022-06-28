@@ -43,24 +43,29 @@
                         <td>Invoice</td>
                         <td>Amount Due</td>
                     </tr>
-                    <tr class="table-data">
-                        <td><input class="invoice-box" type="checkbox" name="invoice[]" class="invoice"></td>
-                        <td>#222</td>
-                        <td>800.29</td>
-                    </tr>
-                    <tr class="table-data">
-                        <td><input class="invoice-box" type="checkbox" name="invoice[]" class="invoice"></td>
-                        <td>#225</td>
-                        <td>250.00</td>
-                    </tr>
-                    <tr class="table-data">
-                        <td><input class="invoice-box" type="checkbox" name="invoice[]" class="invoice"></td>
-                        <td>#226</td>
-                        <td>900.00</td>
-                    </tr>
+                    <?php
+                    if (!$invoice_obj->has_error($invoices) && $invoice_obj->has_invoice($invoices)) :
+                        foreach ($invoices['invoices'] as $invoice) :
+                            $invoice_num = $invoice['InvoiceNo'];
+                            $invoice_amount = number_format($invoice['Amount'], 2, '.', '');
+                    ?>
+                            <tr class="table-data">
+                                <td><input class="invoice-box" type="checkbox" name="invoice[<?php echo $invoice_num; ?>]" value="<?php echo $invoice_amount; ?>" class="invoice"></td>
+                                <td>#<?php echo $invoice_num; ?></td>
+                                <td><?php echo $invoice_amount;  ?></td>
+                            </tr>
+                        <?php
+                        endforeach;
+                    else :
+                        ?>
+                    <?php endif; ?>
                 </table>
+                <?php if ($invoice_obj->has_error($invoices)) : ?>
+                    <p>No pending invoice found.</p>
+                <?php endif; ?>
             </div>
 
+            <?php if ($invoice_obj->has_invoice($invoices)) : ?>
             <div class="table-bottom">
                 <div class="bottom-content">
                     <div id="cfee" class="cfee yfee">
@@ -190,5 +195,6 @@
                     <p><?php echo $payment['error_message']; ?></p>
                 </div>
             <?php endif; ?>
+        <?php endif; //has_invoice ?> 
     </form>
 </div>

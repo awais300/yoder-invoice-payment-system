@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoder\YIPS;
+namespace Yoder\YIPS\User;
 
 defined('ABSPATH') || exit;
 

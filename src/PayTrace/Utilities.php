@@ -185,8 +185,6 @@ class Utilities extends Singleton
         //next is decode the json response and then review Http Status code of the request
         //and move forward with further request.
 
-        $json = Helper::jsonDecode($oauth_response['temp_json_response']);
-
         if ($oauth_response['http_status_code'] != 200) {
             $bool_oauth_error = true;
         } else {

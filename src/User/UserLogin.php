@@ -1,6 +1,7 @@
 <?php
 
-namespace Yoder\YIPS;
+namespace Yoder\YIPS\User;
+use Yoder\YIPS\Helper;
 
 defined('ABSPATH') || exit;
 
@@ -14,18 +15,33 @@ class UserLogin
 
     private const CUSTOMER_INVOICE_PAGE = 'pay-online';
     public const FROM_EMAIL = 'no-reply@yoderoil.com';
-    private $logger = null;
 
     public function __construct()
     {
 
-        $this->logger = WPLogger::get_instance();
         add_action('wp_head', array($this, 'yoder_hide_rememeberme'));
         //add_action('template_redirect', array($this, 'yoder_template_redirect'));
         //add_action('template_redirect', array($this, 'test'));
         add_filter('login_redirect', array($this, 'yoder_login_redirect'), 10, 3);
         add_filter('retrieve_password_message', array($this, 'yoder_retrieve_password_message'), 10, 4);
         add_filter('retrieve_password_notification_email', array($this, 'yoder_retrieve_password_notification_email'), 10, 4);
+        add_filter('wp_authenticate_user', array($this, 'check_sage_id_for_user'));
+    }
+
+    public function check_sage_id_for_user($user)
+    {
+
+        if ($user instanceof \WP_User) {
+            if (!in_array(UserRoles::ROLE_YODER_INVOICE_CUSTOMER, (array) $user->roles)) {
+                return $user;
+            }
+
+            if (empty(get_user_meta($user->ID, UserMeta::META_CUSTOMER_SAGE_ID, true))) {
+                $user = new \WP_Error('authentication_failed', __('<strong>ERROR</strong>: Sage ID not found. Please contact the administrator'));
+            }
+        }
+
+        return $user;
     }
 
     public function yoder_hide_rememeberme()

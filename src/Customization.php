@@ -2,9 +2,11 @@
 
 namespace Yoder\YIPS;
 
-use Yoder\YIPS\PayTrace\PayTraceSetings;
-use Yoder\YIPS\PayTrace\Utilities;
+use Yoder\YIPS\PayTrace\PayTraceSettings;
 use Yoder\YIPS\Rosetta\Rosetta;
+use Yoder\YIPS\Invoice\Invoice;
+use Yoder\YIPS\User\UserLogin;
+use Yoder\YIPS\User\UserMeta;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,9 +30,7 @@ class Customization {
 	* Construct the plugin.
 	*/
 	public function __construct() {
-		
 		add_action( 'init', array( $this, 'load_plugin' ), 0 );
-		
     }
 
 	/**
@@ -91,8 +91,8 @@ class Customization {
      */
     public function init() {
     	new Rosetta();
-    	new PayTraceSetings();
-    	new UserProfileFields();
+    	new PayTraceSettings();
+    	new UserMeta();
     	new UserLogin();
     	new Invoice();
     }
