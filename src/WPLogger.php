@@ -12,20 +12,48 @@ defined('ABSPATH') || exit;
 
 class WPLogger extends Singleton
 {
-    // Try to use the same name for log dir as plguin's slug name
+    /**
+     * Default directory name. 
+     * Try to use the same name for log dir as plguin's slug name
+     *
+     * @var LOG_DIRECTORY_NAME
+     */
     private const LOG_DIRECTORY_NAME = 'yoder-invoice-payment-system';
+
+    /**
+     * Default file name prefix.
+     *
+     * @var DEFAULT_LOG_FILE_NAME_PREFIX
+     */
     private const DEFAULT_LOG_FILE_NAME_PREFIX = 'api';
+
+    /**
+     * Default logging mode.
+     *
+     * @var $debug
+     */
     private $debug = true;
 
+    /**
+     * disable logging if pass true as parameter. Pass false to enable logging.
+     *
+     * @param bool $debug.
+     */
     public function disable_logging(bool $debug = false)
     {
-        if($debug === true) {
-             $this->debug = false;
+        if ($debug === true) {
+            $this->debug = false;
         } else {
             $this->debug = true;
         }
     }
 
+    /**
+     * Creates a directory.
+     *
+     * @param string $upload_base_path.
+     * @return string path to directory 
+     */
     public function create_log_directory($upload_base_path)
     {
         $dir = $upload_base_path . '/' . self::LOG_DIRECTORY_NAME;
@@ -36,6 +64,11 @@ class WPLogger extends Singleton
         return $dir;
     }
 
+    /**
+     * Get directory where log files need to put.
+     *
+     * @return string path to directory 
+     */
     public function get_log_dirctory()
     {
         $path_info = wp_get_upload_dir();
@@ -44,6 +77,12 @@ class WPLogger extends Singleton
         return $dir;
     }
 
+    /**
+     * Write log to a file
+     *
+     * @param mix $mix
+     * @param string $log_file optional file name instead of default.
+     */
     public function log($mix, $log_file = null)
     {
         if ($this->debug === false) {
