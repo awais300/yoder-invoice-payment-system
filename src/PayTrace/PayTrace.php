@@ -174,7 +174,7 @@ class PayTrace extends Singleton
         global $wpdb;
         $table = $wpdb->prefix . Schema::PAYTRACE_RESPONSE_TABLE;
         $data = array(
-            'user_id' => get_current_user_id(), 
+            'user_id' => get_current_user_id(),
             'response' => $json_response,
             'status' => 'success',
             'date_created' => date('Y-m-d H:i:s')
@@ -207,7 +207,7 @@ class PayTrace extends Singleton
         global $wpdb;
         $table = $wpdb->prefix . Schema::PAYTRACE_RESPONSE_TABLE;
         $data = array(
-            'user_id' => get_current_user_id(), 
+            'user_id' => get_current_user_id(),
             'response' => $json_response,
             'status' => 'fail',
             'date_created' => date('Y-m-d H:i:s')
