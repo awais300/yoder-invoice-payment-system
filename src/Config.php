@@ -36,7 +36,8 @@ class Config extends Singleton
             ],
             'paytrace' => [
                 'username' => Cryptor::decrypt('Hb0Yd9Db58dGmRal5SnvsARUsdMT0QPOcKfkGQMQr2Sy2dW2KyiLMq2oMWvQ0IvJreCxHcpuka/Xodz9XWEhATw='),
-                'password' => Cryptor::decrypt('1oUiZoso9JsElIaLbJJ0SKCXPxpLbX8l0Tp9RmFTJ0NKIQ5wZl1QKQ5z/wEckSUOtjO7')
+                'password' => Cryptor::decrypt('1oUiZoso9JsElIaLbJJ0SKCXPxpLbX8l0Tp9RmFTJ0NKIQ5wZl1QKQ5z/wEckSUOtjO7'),
+                'integrator_id' => '967174xd2CvC'
             ]
         ];
 
