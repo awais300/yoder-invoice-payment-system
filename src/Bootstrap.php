@@ -3,7 +3,6 @@
 namespace Yoder\YIPS;
 
 use Yoder\YIPS\PayTrace\PayTraceSettings;
-use Yoder\YIPS\Rosetta\Rosetta;
 use Yoder\YIPS\Invoice\Invoice;
 use Yoder\YIPS\User\UserLogin;
 use Yoder\YIPS\User\UserMeta;
