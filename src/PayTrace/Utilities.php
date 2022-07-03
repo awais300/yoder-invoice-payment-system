@@ -8,8 +8,9 @@ use Yoder\YIPS\Singleton;
 defined('ABSPATH') || exit;
 
 /*
- * This file contains all the common functions that are accessilbe and used on sample codes.
+ * This file contains all the common functions that are accessilbe and used on sample codes for PayTrace.
  */
+
 
 /**
  * Class Utilities
@@ -18,24 +19,12 @@ defined('ABSPATH') || exit;
 
 class Utilities extends Singleton
 {
-
-    /*
-    * This function will find the associated status message from the file
-    * used in Parse_ini_file( path to the file)
-    * Returns the status code and message as a string.
-    * HttpCodeinfo.ini file contains all the associated message with http status
-    */
-    public function httpStatusInfo($http_status_code)
-    {
-        $http_message = parse_ini_file(untrailingslashit(YIPS_PAYTRACE_DIR_PATH) . '/HttpcodeInfo.ini');
-        $http_info =  $http_status_code . " " . $http_message[$http_status_code];
-        return $http_info;
-    }
-
-    /*
-    * This function will make a request to accuire the OAuth token
-    * Returns an array with Json response, Curl_error and http status code of the request.
-    */
+    /**
+     * This function will make a request to accuire the OAuth token
+     * Returns an array with Json response, Curl_error and http status code of the request.
+     *
+     * @return array
+     */
     public function oAuthTokenGenerator()
     {
 
@@ -80,6 +69,14 @@ class Utilities extends Singleton
         return $result;
     }
 
+    /**
+     * This function will make a request by sending the OAuth token in header
+     * Returns an array with Json response, Curl_error and http status code of the request.
+     * Respone also contains the client key.
+     * 
+     * @param string $oauth_token
+     * @return array
+     */
     public function ProtectAuthTokenGenerator($oauth_token)
     {
 
@@ -122,7 +119,15 @@ class Utilities extends Singleton
         return $result;
     }
 
-    // This function will actually execute the transaction based on the request data, url and OAuth token
+    /**
+     * This function will actually execute the transaction based on the request data, url and OAuth token
+     * Returns an array with Json response, Curl_error and http status code of the request.
+     * 
+     * @param string $oauth_token
+     * @param Array $request_data
+     * @param string $url API endpoint.
+     * @return array
+     */
     public function processTransaction($oauth_token, $request_data, $url)
     {
         // array variable to store the Response value, httpstatus code and curl error.
@@ -164,12 +169,13 @@ class Utilities extends Singleton
         return $result;
     }
 
-
-    /*
-    * This function will check for the OAuth request error.
-    * Display the error if any and
-    * Returns the boolean flag
-    */
+    /**
+     * This function will check for the OAuth request error.
+     * Returns the boolean flag
+     *
+     * @param array $oauth_response
+     * @return boolean
+     */
     public function isFoundOAuthTokenError($oauth_response)
     {
         //set a variable with default 'false' value assuming some error occurred.
@@ -195,10 +201,13 @@ class Utilities extends Singleton
         return $bool_oauth_error;
     }
 
-     /*
-    * This function will get OAuth request error.
-    * Display the error if any
-    */
+    /**
+     * This function will check for the OAuth request error.
+     * retirm the error if any.
+     * 
+     * @param array $oauth_response
+     * @return string
+     */
     public function getFoundOAuthTokenError($oauth_response)
     {
         $error_message = '';
@@ -212,15 +221,15 @@ class Utilities extends Singleton
         //next is decode the json response and then review Http Status code of the request
         //and move forward with further request.
 
-        $json = Helper::jsonDecode($oauth_response['temp_json_response']);
+        $json = (Helper::instance())->jsonDecode($oauth_response['temp_json_response']);
 
         if ($oauth_response['http_status_code'] != 200) {
 
-            if (!empty($oauth_response['temp_json_response'])) {                
+            if (!empty($oauth_response['temp_json_response'])) {
                 //unsuccessful OAuth Json response
-                $error_message = $this->getHttpStatus($oauth_response['http_status_code']) .' '. $this->getOAuthError($json);
+                $error_message = $this->getHttpStatus($oauth_response['http_status_code']) . ' ' . $this->getOAuthError($json);
             } else {
-                 //in case of some other error, utilize the httpstatus code and message.
+                //in case of some other error, utilize the httpstatus code and message.
                 $error_message = "OAuth Request Error!" . $this->getHttpStatus($oauth_response['http_status_code']);
             }
         }
@@ -229,7 +238,13 @@ class Utilities extends Singleton
     }
 
 
-    //Tunction to display individual keys of unsuccessful OAuth Json response turns into OAuth error response
+    /**
+     * This function to display individual keys of unsuccessful OAuth Json response 
+     * turns into OAuth error response
+     *
+     * @param string $json_string
+     * @return string
+     */
     public function getOAuthError($json_string)
     {
         $oauth_error = 'OAuth Error: ' . $json_string['error'];
@@ -237,9 +252,30 @@ class Utilities extends Singleton
         return $oauth_error;
     }
 
-    //This function is used to display the http status
+    /**
+     * This function is used to display the http status
+     *
+     * @param int $http_status_code
+     * @return string
+     */
     public function getHttpStatus($http_status_code)
     {
         return $this->httpStatusInfo($http_status_code);
+    }
+
+    /**
+     * This function will find the associated status message from the file
+     * used in Parse_ini_file( path to the file)
+     * Returns the status code and message as a string.
+     * HttpCodeinfo.ini file contains all the associated message with http status
+     * 
+     * @param int $http_status_code
+     * @return string
+     */
+    public function httpStatusInfo($http_status_code)
+    {
+        $http_message = parse_ini_file(untrailingslashit(YIPS_PAYTRACE_DIR_PATH) . '/HttpcodeInfo.ini');
+        $http_info =  $http_status_code . " " . $http_message[$http_status_code];
+        return $http_info;
     }
 }
