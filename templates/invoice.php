@@ -35,7 +35,7 @@
         <div class="yrow">
             <div class="w3-panel w3-pale-red w3-display-container w3-border">
                 <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">×</span>
-                <p><?php echo esc_html($customer['error_message']); ?></p>
+                <h6><?php echo esc_html($customer['error_message']); ?></h6>
             </div>
         </div>
     <?php endif; ?>
@@ -203,7 +203,7 @@
                 <?php if (isset($payment['error_message']) && !empty($payment['error_message'])) : ?>
                     <div class="w3-panel w3-pale-red w3-display-container w3-border">
                         <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">×</span>
-                        <p><?php echo esc_html($payment['error_message']); ?></p>
+                        <h6><?php echo esc_html($payment['error_message']); ?></h6>
                     </div>
                 <?php endif; ?>
             <?php endif; //has_invoice 
