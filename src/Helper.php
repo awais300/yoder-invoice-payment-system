@@ -5,16 +5,23 @@ namespace Yoder\YIPS;
 defined('ABSPATH') || exit;
 
 /**
- * Class UserRoles
+ * Class Helper
  * @package Yoder\YIPS
  */
 
-class Helper
+class Helper extends Singleton
 {
-    public static function get_headers_for_email($from_email, $from_name = '')
+    /**
+     * Set email headers.
+     *
+     * @param string $from_email
+     * @param string $from_name
+     * @return string The email headers
+     */
+    public function get_headers_for_email($from_email, $from_name = '')
     {
         if (empty($from_email)) {
-            throw new \Exception('From email is missing');
+            throw new \Exception(__('From email is missing', 'yips-customization'));
         }
 
         if (empty($from_name)) {
@@ -48,8 +55,7 @@ class Helper
      * @author Tamlyn Rhodes <http://tamlyn.org>
      * @license http://creativecommons.org/publicdomain/mark/1.0/ Public Domain
      */
-
-    public static function xmlToArray($xml, $options = array())
+    public function xmlToArray($xml, $options = array())
     {
         $defaults = array(
             'namespaceRecursive' => false,  //setting to true will get xml doc namespaces recursively
@@ -95,7 +101,7 @@ class Helper
 
             foreach ($xml->children($namespace) as $childXml) {
                 //recurse into child nodes
-                $childArray = self::xmlToArray($childXml, $options);
+                $childArray = $this->xmlToArray($childXml, $options);
                 $childTagName = key($childArray);
                 $childProperties = current($childArray);
 
@@ -146,15 +152,28 @@ class Helper
         );
     }
 
-    public static function xmlToJson($xml, $options = array())
+
+    /**
+     * Convert XML to JSON
+     *
+     * @param SimpleXMLElement $xml The root node
+     * @param array $options Associative array of options
+     * @return JSON
+     */
+    public function xmlToJson($xml, $options = array())
     {
-        $xml_to_array = self::xmlToArray($xml, $options);
+        $xml_to_array = $this->xmlToArray($xml, $options);
         $xml_to_json = json_encode($xml_to_array);
         return $xml_to_json;
     }
 
-    //function to decode the Json response.
-    public static function jsonDecode($json_string)
+    /**
+     * Convert JSON string to Array
+     *
+     * @param JSON $json_string
+     * @return Array
+     */
+    public function jsonDecode($json_string)
     {
         //Decode the Json Response.
         if (empty($json_string)) {
@@ -165,11 +184,16 @@ class Helper
         return $json;
     }
 
-    //function to encode the string into Json
-    public static function jsonEncode($json_string)
+    /**
+     * Convert Array to JSON string
+     *
+     * @param array $array
+     * @return JSON
+     */
+    public function jsonEncode($array)
     {
         //Encode the Json Response.
-        $json = json_encode($json_string);
+        $json = json_encode($array);
         return $json;
     }
 }
