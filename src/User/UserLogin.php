@@ -1,7 +1,9 @@
 <?php
 
 namespace Yoder\YIPS\User;
+
 use Yoder\YIPS\Helper;
+use Yoder\YIPS\Invoice\Invoice;
 
 defined('ABSPATH') || exit;
 
@@ -12,22 +14,33 @@ defined('ABSPATH') || exit;
 
 class UserLogin
 {
-
-    private const CUSTOMER_INVOICE_PAGE = 'pay-online';
+    /**
+     * The From Email address.
+     *
+     * @var FROM_EMAIL
+     */
     public const FROM_EMAIL = 'no-reply@yoderoil.com';
 
+    /**
+     * Construct the plugin.
+     */
     public function __construct()
     {
 
         add_action('wp_head', array($this, 'yoder_hide_rememeberme'));
-        //add_action('template_redirect', array($this, 'yoder_template_redirect'));
-        //add_action('template_redirect', array($this, 'test'));
+        add_action('template_redirect', array($this, 'yoder_template_redirect'));
         add_filter('login_redirect', array($this, 'yoder_login_redirect'), 10, 3);
         add_filter('retrieve_password_message', array($this, 'yoder_retrieve_password_message'), 10, 4);
         add_filter('retrieve_password_notification_email', array($this, 'yoder_retrieve_password_notification_email'), 10, 4);
         add_filter('wp_authenticate_user', array($this, 'check_sage_id_for_user'));
     }
 
+    /**
+     * Check if user has the Sage ID.
+     *
+     * @param WP_User $user
+     * @return WP_User
+     */
     public function check_sage_id_for_user($user)
     {
 
@@ -44,6 +57,9 @@ class UserLogin
         return $user;
     }
 
+    /**
+     * Hide remember me option via CSS.
+     */
     public function yoder_hide_rememeberme()
     {
         echo '<style>
@@ -53,6 +69,9 @@ class UserLogin
         </style>';
     }
 
+    /**
+     * Redirect the user if user visit specific pages.
+     */
     public function yoder_template_redirect()
     {
         global $post;
@@ -61,30 +80,44 @@ class UserLogin
         $slugs = array(
             'dashboard',
             'register',
-            'lostpassword',
-            'resetpass',
         );
 
-        if (!current_user_can('manage_options')) {
-            if (in_array($page_slug, $slugs)) {
-                wp_redirect(get_site_url());
-                exit;
-            }
+        if (in_array($page_slug, $slugs)) {
+            wp_redirect(get_site_url());
+            exit;
         }
     }
 
+    /**
+     * Rediect user to invoice page after login.
+     *
+     * @param string $redirect_to
+     * @param string $request
+     * @param WP_User $user
+     * @return string
+     */
     public function yoder_login_redirect($redirect_to, $request, $user)
     {
 
         if (is_a($user, 'WP_User') && $user->exists()) {
             if (in_array(UserRoles::ROLE_YODER_INVOICE_CUSTOMER, (array) $user->roles)) {
-                $redirect_to = get_site_url() . '/' . self::CUSTOMER_INVOICE_PAGE;
+                $redirect_to = get_site_url() . '/' . Invoice::CUSTOMER_INVOICE_PAGE;
             }
         }
 
         return $redirect_to;
     }
 
+
+    /**
+     * Customize password reset email message.
+     *
+     * @param string $message
+     * @param string $key
+     * @param string $user_login
+     * @param WP_User $user
+     * @return string
+     */
     public function yoder_retrieve_password_message($message, $key, $user_login, $user)
     {
         if (is_a($user, 'WP_User') && $user->exists()) {
@@ -110,6 +143,15 @@ class UserLogin
         return $message;
     }
 
+    /**
+     * Change the from name and from email address to send email notification.
+     *
+     * @param Array $defaults
+     * @param string $key
+     * @param string $user_login
+     * @param WP_User $user
+     * @return string
+     */
     public function yoder_retrieve_password_notification_email($defaults, $key, $user_login, $user)
     {
         if (is_a($user, 'WP_User') && $user->exists()) {
@@ -118,10 +160,16 @@ class UserLogin
             }
         }
 
-        $defaults['headers'] = Helper::get_headers_for_email(self::FROM_EMAIL);
+        $defaults['headers'] = (Helper::instance())->get_headers_for_email(self::FROM_EMAIL);
         return $defaults;
     }
 
+
+    /**
+     * Get the password reset page slug.
+     *
+     * @return string
+     */
     public function get_pass_reset_page()
     {
         $page = 'wp-login.php';
