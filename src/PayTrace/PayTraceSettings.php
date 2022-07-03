@@ -1,7 +1,8 @@
 <?php
 
 namespace Yoder\YIPS\PayTrace;
-use Yoder\YIPS\Cryptor;
+
+use Yoder\YIPS\Config;
 
 defined('ABSPATH') || exit;
 
@@ -16,21 +17,30 @@ defined('ABSPATH') || exit;
 
 class PayTraceSettings
 {
+    /**
+     * Contains plugin configuration.
+     *
+     * @var $logger
+     */
+    private $config = null;
 
+    /**
+     * Construct the plugin.
+     **/
     public function __construct()
     {
+        $this->config = (Config::instance())->get_config('paytrace');
         $this->init_settings();
     }
 
+    /**
+     * Defint constants and setting to be used for PayTrace API.
+     *
+     **/
     public function init_settings()
     {
-        /*echo Cryptor::encrypt('awais@effectwebagency.com');
-        echo "<br/>";
-        echo Cryptor::encrypt('flummox@123');
-        exit;*/
-
-        define("PAYTRACE_USERNAME", Cryptor::decrypt('c3O2OsqL078mWtnJJG9fCaP1JHOwPCRkH4B3XA0f2k+M9wAjBtIWKwjb2/GcxmAuIFJuTVJ6jkj2OlWhiIHpl8M='));
-        define("PAYTRACE_PASSWORD", Cryptor::decrypt('0mI+TNKkbu+KmP30GX4mh7UJRAQ1bml6hWp9w52uLPeylqxS97SVQG9YwFuKXcSdgs6v')); //pvc
+        define("PAYTRACE_USERNAME", $this->config['username']);
+        define("PAYTRACE_PASSWORD", $this->config['password']); //pvc
         define("PAYTRACE_GRANT_TYPE", "password");
 
 
