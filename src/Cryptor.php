@@ -8,7 +8,8 @@ defined('ABSPATH') || exit;
  * Class Cryptor
  * @package Yoder\YIPS
  */
-class Cryptor {
+class Cryptor
+{
 	private static $key = '6gc;pfVaEN5.8c2H_d4E!N_!qC}FkX)B';
 	/**
 	 * Encrypt a message
@@ -16,7 +17,8 @@ class Cryptor {
 	 * @param string $message
 	 * @return string
 	 */
-	public static function encrypt($message) {
+	public static function encrypt($message)
+	{
 		$key = self::$key;
 		$nonce = random_bytes(
 			SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
@@ -24,11 +26,11 @@ class Cryptor {
 
 		$cipher = base64_encode(
 			$nonce .
-			sodium_crypto_secretbox(
-				$message,
-				$nonce,
-				$key
-			)
+				sodium_crypto_secretbox(
+					$message,
+					$nonce,
+					$key
+				)
 		);
 		sodium_memzero($message);
 		sodium_memzero($key);
@@ -41,14 +43,15 @@ class Cryptor {
 	 * @param string $encrypted
 	 * @return string
 	 */
-	public static function decrypt($encrypted) {
+	public static function decrypt($encrypted)
+	{
 		$key = self::$key;
 		$decoded = base64_decode($encrypted);
 		if ($decoded === false) {
-			throw new \Exception('Encoding failed');
+			throw new \Exception(__('Encoding failed', 'yips-customization'));
 		}
 		if (mb_strlen($decoded, '8bit') < (SODIUM_CRYPTO_SECRETBOX_NONCEBYTES + SODIUM_CRYPTO_SECRETBOX_MACBYTES)) {
-			throw new \Exception('The message was truncated');
+			throw new \Exception(__('The message was truncated', 'yips-customization'));
 		}
 		$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
 		$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
@@ -59,7 +62,7 @@ class Cryptor {
 			$key
 		);
 		if ($plain === false) {
-			throw new \Exception('The message was tampered with in transit');
+			throw new \Exception(__('The message was tampered with in transit', 'yips-customization'));
 		}
 		sodium_memzero($ciphertext);
 		sodium_memzero($key);
