@@ -30,14 +30,13 @@ jQuery(document).ready(function($) {
 
     function display_totals(total) {
         // Total fee
-        total = total.toFixed(2);
+        total = round(total, 2);
 
         // Convenience fee (3% of total)
-        cfee = 0.03 * total;
-        cfee = cfee.toFixed(2);
+        cfee = round(0.03 * total, 2);
 
         total_fee = Number(total) + Number(cfee);
-        total_fee = total_fee.toFixed(2);
+        total_fee = round(total_fee, 2);
 
         $('#yoder-pay-online .fee span').text(total_fee);
         $('#yoder-pay-online #total_fee').val(total_fee);
@@ -52,5 +51,10 @@ jQuery(document).ready(function($) {
 
     function box_unchecked($ele) {
         $ele.parent().parent().css('background-color', 'inherit');
+    }
+
+    function round(num, precision) {
+        var base = 10 ** precision;
+        return (Math.round(num * base) / base).toFixed(precision);
     }
 });
