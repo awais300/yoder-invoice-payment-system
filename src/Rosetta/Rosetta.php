@@ -39,6 +39,7 @@ class Rosetta extends Singleton
         $this->config = (Config::instance())->get_config('rosetta');
         $this->logger = WPLogger::instance();
 
+        // Debug
         if (isset($_GET['yoder_api_debug'])) {
             $test = $this->test();
             dd($test);
@@ -46,6 +47,9 @@ class Rosetta extends Singleton
         }
     }
 
+    /**
+     * Test function
+     **/
     public function test()
     {
 
@@ -284,15 +288,4 @@ class Rosetta extends Singleton
         $response['response'] = $response_data;
         return $response;
     }
-}
-
-/**
- * Debugging    
- * @param  mix $mix
- */
-function dd($mix)
-{
-    echo "<pre>";
-    print_r($mix);
-    echo "</pre>";
 }
