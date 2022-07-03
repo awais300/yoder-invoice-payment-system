@@ -1,7 +1,8 @@
 <?php
+
 /**
  * Plugin Name: Yoder Invoice Payment System
- * Description: Plugin description
+ * Description: This plugin allows yoder customer to pay invoice via Paytrace API. The invoices are feteched via Rosetta PDI API and dispaly invoices for the logged in user.
  * Author: Muhammad Awais / EffectWebAgency
  * Author URI: https://www.effectwebagency.com/
  * Version: 1.0.0
@@ -25,31 +26,32 @@ namespace Yoder\YIPS;
 
 use Yoder\YIPS\User\UserRoles;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
 }
 
-if ( ! defined( 'YIPS_CUST_PLUGIN_FILE' ) ) {
-    define( 'YIPS_CUST_PLUGIN_FILE', __FILE__ );
+if (!defined('YIPS_CUST_PLUGIN_FILE')) {
+    define('YIPS_CUST_PLUGIN_FILE', __FILE__);
 }
 
 require_once 'vendor/autoload.php';
-
-Customization::instance();
+Bootstrap::instance();
 
 /**
  * Activate the plugin.
  */
-function yoder_on_activate() {
-    UserRoles::add_role();
+function yoder_on_activate()
+{
+    (UserRoles::instance())->add_role();
 }
-register_activation_hook( __FILE__, __NAMESPACE__ .'\\yoder_on_activate' );
+register_activation_hook(__FILE__, __NAMESPACE__ . '\\yoder_on_activate');
 
 
 /**
  * Deactivation hook.
  */
-function yoder_on_deactivate() {
-    UserRoles::remove_role();
+function yoder_on_deactivate()
+{
+    (UserRoles::instance())->remove_role();
 }
-register_deactivation_hook( __FILE__, __NAMESPACE__ . '\\yoder_on_deactivate' );
+register_deactivation_hook(__FILE__, __NAMESPACE__ . '\\yoder_on_deactivate');
