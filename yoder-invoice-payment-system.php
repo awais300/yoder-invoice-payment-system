@@ -42,6 +42,7 @@ Bootstrap::instance();
  */
 function yoder_on_activate()
 {
+    (Schema::instance())->create_table();
     (UserRoles::instance())->add_role();
 }
 register_activation_hook(__FILE__, __NAMESPACE__ . '\\yoder_on_activate');
