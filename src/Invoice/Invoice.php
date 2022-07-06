@@ -135,7 +135,10 @@ class Invoice extends Singleton
     public function display_thankyou_page()
     {
 
-        $data = array();
+        $data = array(
+            'main_screen_url' => '/' . self::CUSTOMER_INVOICE_PAGE,
+            'logout_url' => wp_login_url('/' . self::CUSTOMER_LOGIN_PAGE),
+        );
         $html = $this->loader->get_template(
             'thank-you.php',
             $data,
