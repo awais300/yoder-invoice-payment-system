@@ -35,6 +35,31 @@ class UserLogin
         add_filter('wp_authenticate_user', array($this, 'check_sage_id_for_user'));
     }
 
+
+    /**
+     * Logout invoice customer if user visits WooCommerce pages.
+     *
+     */
+    public function conditional_logout_invoice_customer()
+    {
+        if (class_exists('WooCommerce')) {
+            if (
+                is_shop() ||
+                is_product_category() ||
+                is_product_tag() ||
+                is_product() ||
+                is_cart() ||
+                is_checkout() ||
+                is_account_page()
+            ) {
+                $user = wp_get_current_user();
+                if (in_array(UserRoles::ROLE_YODER_INVOICE_CUSTOMER, (array) $user->roles)) {
+                    wp_logout();
+                }
+            }
+        }
+    }
+
     /**
      * Check if user has the Sage ID.
      *
@@ -74,6 +99,8 @@ class UserLogin
      */
     public function yoder_template_redirect()
     {
+        $this->conditional_logout_invoice_customer();
+
         global $post;
         $page_slug = $post->post_name;
 
