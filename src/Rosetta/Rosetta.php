@@ -34,7 +34,7 @@ class Rosetta extends Singleton
     /**
      * Construct the plugin.
      */
-    public function on_construct()
+    public function __construct()
     {
         $this->config = (Config::instance())->get_config('rosetta');
         $this->logger = WPLogger::instance();
@@ -52,6 +52,7 @@ class Rosetta extends Singleton
      **/
     public function test()
     {
+        //echo $this->config['security_key'];
 
         $xml = "<rosetta>
           <securitykey>{$this->config['security_key']}</securitykey>
@@ -59,12 +60,29 @@ class Rosetta extends Singleton
           <xml>
             <ExtSourceID>YODERWEB</ExtSourceID>
             <ARDivisionNo>00</ARDivisionNo>
-            <CustomerNo>0001067</CustomerNo>
+            <CustomerNo>0000014</CustomerNo>
+            <AdditionalFields>UDF_ACCOUNT_TYPE$</AdditionalFields>
           </xml>
         </rosetta>";
 
+        echo "Request";
+        echo $xml;
+        echo "<br/>";
+
+
         $response = $this->yoder_remote_get($xml);
-        return $response;
+
+        //dd($response);
+
+        $xml = $response['response'];
+        echo $xml;
+        exit;
+        $xml = @simplexml_load_string($xml);
+        /*if ($xml === false) {
+            throw new \Exception('Invalid XML response');
+        }*/
+        $xml_array = (Helper::instance())->xmlToArray($xml);
+        return $xml_array;
     }
 
     /**
@@ -215,7 +233,7 @@ class Rosetta extends Singleton
         $bytes = 1024;
         $response_data = '';
 
-        // Usually an XML to send to rosetta server.
+        // Usually an XML to send to Rosetta server.
         $message = trim($request_message);
 
         $response = array(
@@ -228,7 +246,7 @@ class Rosetta extends Singleton
         if ($socket === false) {
             $error_code = socket_last_error();
             $error_msg = socket_strerror($error_code);
-            $error_message = "Clouldn't create socket: [{$error_code}] {$error_msg}";
+            $error_message = "Couldn't create socket: [{$error_code}] {$error_msg}";
 
             $this->logger->log($error_message);
 
@@ -242,7 +260,7 @@ class Rosetta extends Singleton
         if ($socket_connection === false) {
             $error_code = socket_last_error();
             $error_msg = socket_strerror($error_code);
-            $error_message = "Clouldn't create socket connection: [{$error_code}] {$error_msg}";
+            $error_message = "Couldn't create socket connection: [{$error_code}] {$error_msg}";
 
             $this->logger->log($error_message);
 
@@ -256,7 +274,7 @@ class Rosetta extends Singleton
         if ($socket_write === false) {
             $error_code = socket_last_error();
             $error_msg = socket_strerror($error_code);
-            $error_message = "Clouldn't write to socket connection: [{$error_code}] {$error_msg}";
+            $error_message = "Couldn't write to socket connection: [{$error_code}] {$error_msg}";
 
             $this->logger->log($error_message);
 
@@ -265,7 +283,7 @@ class Rosetta extends Singleton
             return $response;
         }
 
-        // Read response from rosetta server via socket.
+        // Read response from Rosetta server via socket.
         while (($buffer = socket_read($socket, $bytes))) {
             if ($buffer === false) {
                 $error_code = socket_last_error();
