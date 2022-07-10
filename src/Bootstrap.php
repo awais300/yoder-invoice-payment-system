@@ -4,8 +4,11 @@ namespace Yoder\YIPS;
 
 use Yoder\YIPS\PayTrace\PayTraceSettings;
 use Yoder\YIPS\Invoice\Invoice;
+use Yoder\YIPS\PayTrace\PayTrace;
+use Yoder\YIPS\Rosetta\Rosetta;
 use Yoder\YIPS\User\UserLogin;
 use Yoder\YIPS\User\UserMeta;
+use Yoder\YIPS\Admin\ExportTransactions;
 
 defined('ABSPATH') || exit;
 
@@ -102,11 +105,14 @@ class Bootstrap
 	 */
 	public function init()
 	{
-		new Config();
 		new UserMeta();
 		new UserLogin();
 		new Invoice();
 		new PayTraceSettings();
+
+		if(is_admin()) {
+			new ExportTransactions();
+		}	
 	}
 
 	/**
