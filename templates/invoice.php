@@ -72,7 +72,10 @@
                     <?php endif; ?>
                 </table>
                 <?php if (!$invoice_obj->has_invoice($invoices)) : ?>
-                    <p><?php _e('No pending invoice found.', 'yips-customization'); ?></p>
+                    <div class="w3-panel w3-pale-green w3-display-container w3-border">
+                        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright">×</span>
+                        <h6><?php _e('No pending invoice found.', 'yips-customization'); ?></h6>
+                    </div>
                 <?php endif; ?>
             </div>
 
@@ -97,34 +100,40 @@
                                 styles: {
                                     'code': {
                                         'font_color': '#323232',
-                                        'border_color': '#ca1631',
+                                        'border_color': '#ccc',
                                         'label_color': '#000',
                                         'label_size': '20px',
                                         'background_color': 'white',
                                         'border_style': 'solid',
-                                        'font_size': '15pt',
-                                        'height': '30px',
+                                        'input_border_width': '1px',
+                                        'font_size': '13pt',
+                                        'label_size': '17px',
+                                        'height': '26px',
                                         'width': '64px'
                                     },
                                     'cc': {
                                         'font_color': '#323232',
-                                        'border_color': '#ca1631',
+                                        'border_color': '#ccc',
                                         'label_color': '#000',
                                         'label_size': '20px',
                                         'background_color': 'white',
                                         'border_style': 'solid',
-                                        'font_size': '15pt',
+                                        'input_border_width': '1px',
+                                        'font_size': '13pt',
+                                        'label_size': '17px',
                                         'height': '30px',
                                         'width': '250px'
                                     },
                                     'exp': {
                                         'font_color': '#323232',
-                                        'border_color': '#ca1631',
+                                        'border_color': '#ccc',
                                         'label_color': '#000',
                                         'label_size': '20px',
                                         'background_color': 'white',
                                         'border_style': 'solid',
-                                        'font_size': '15pt',
+                                        'input_border_width': '1px',
+                                        'font_size': '13pt',
+                                        'label_size': '17px',
                                         'height': '30px',
                                         'width': '64px',
                                         'type': 'dropdown'
