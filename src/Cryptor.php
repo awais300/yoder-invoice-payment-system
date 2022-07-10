@@ -12,7 +12,7 @@ class Cryptor
 {
 	private static $key = '6gc;pfVaEN5.8c2H_d4E!N_!qC}FkX)B';
 	/**
-	 * Encrypt a message
+	 * Encrypt a message.
 	 *
 	 * @param string $message
 	 * @return string
@@ -38,7 +38,7 @@ class Cryptor
 	}
 
 	/**
-	 * Decrypt a message
+	 * Decrypt a message.
 	 *
 	 * @param string $encrypted
 	 * @return string
