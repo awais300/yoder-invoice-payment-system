@@ -35,7 +35,46 @@ class WPLogger extends Singleton
     private $debug = true;
 
     /**
-     * disable logging if pass true as parameter. Pass false to enable logging.
+     * Holds custom file name.
+     *
+     * @var $debug_file_name
+     */
+    private $debug_file_name = null;
+
+    /**
+     * Construct the plugin.
+     **/
+    public function on_construct()
+    {
+        $this->set_log_file_name();
+    }
+
+    /**
+     * Set debug file name.
+     *
+     * @param string $debug_file_name.
+     */
+    public function set_log_file_name($debug_file_name = null)
+    {
+        if ($debug_file_name) {
+            $this->debug_file_name = $debug_file_name;
+        } else {
+            $this->debug_file_name = self::DEFAULT_LOG_FILE_NAME_PREFIX;
+        }
+    }
+
+    /**
+     * Return debug file name.
+     *
+     * @return string
+     */
+    public function get_log_file_name()
+    {
+        return $this->debug_file_name;
+    }
+
+    /**
+     * Disable logging if pass true as parameter. Pass false to enable logging.
      *
      * @param bool $debug.
      */
@@ -78,23 +117,19 @@ class WPLogger extends Singleton
     }
 
     /**
-     * Write log to a file
+     * Write log to a file.
      *
      * @param mix $mix
-     * @param string $log_file optional file name instead of default.
      */
-    public function log($mix, $log_file = null)
+    public function log($mix)
     {
         if ($this->debug === false) {
             return;
         }
 
         $daily_log = date('Y-m-d');
-        if ($log_file == null) {
-            $file_name = self::DEFAULT_LOG_FILE_NAME_PREFIX . '_' . $daily_log . '.log';
-        } else {
-            $file_name = $log_file . '_' . $daily_log . '.log';
-        }
+        $file_name = $this->get_log_file_name() . '_' . $daily_log . '.log';
+
 
         $data  = '[' . date('Y-m-d H:i:s') . ']' . PHP_EOL;
         $data .= print_r($mix, true);
