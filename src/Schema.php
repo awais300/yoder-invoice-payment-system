@@ -14,7 +14,7 @@ defined('ABSPATH') || exit;
 class Schema extends Singleton
 {
     /**
-     * The table name
+     * The table name.
      *
      * @var PAYTRACE_RESPONSE_TABLE
      */
@@ -22,7 +22,7 @@ class Schema extends Singleton
 
 
     /**
-     * Create DB table
+     * Create DB table.
      */
     public function create_table()
     {
