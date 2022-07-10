@@ -116,7 +116,7 @@ class UserLogin
     }
 
     /**
-     * Rediect user to invoice page after login.
+     * Redirect user to invoice page after login.
      *
      * @param string $redirect_to
      * @param string $request
