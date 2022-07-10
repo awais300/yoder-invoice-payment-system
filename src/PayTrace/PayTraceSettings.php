@@ -72,5 +72,8 @@ class PayTraceSettings
 
         // URL for Create Customer(PayTrace Vault) Method
         define("URL_PROTECT_SALE_CREATE_CUSTOMER", BASE_URL . API_VERSION . "/transactions/sale/pt_protect_customer");
+
+        // URL to get transactions by date range.
+        define("URL_EXPORT_BY_DATE_RANGE", BASE_URL . API_VERSION . "/transactions/export/by_date_range");
     }
 }
