@@ -23,7 +23,7 @@ class PayTrace extends Singleton
     /**
      * Contains plugin configuration.
      *
-     * @var $logger
+     * @var $config
      */
     private $config = null;
 
@@ -49,6 +49,87 @@ class PayTrace extends Singleton
         $this->config = (Config::instance())->get_config('paytrace');
         $this->logger = WPLogger::instance();
         $this->util = Utilities::instance();
+    }
+
+    /**
+     * Get transactions details by date range.
+     * @param  string $start_date
+     * @param  string $end_date
+     * @return []
+     */
+    public function get_transactions_by_date_range($start_date, $end_date)
+    {
+        if (empty($start_date) || empty($end_date)) {
+            throw new \Exception(__('Start date and end date is required', 'yips-customization'));
+        }
+
+        // Convert date format that API accepts.
+        $start_date = date('m/d/Y', strtotime($start_date));
+        $end_date = date('m/d/Y', strtotime($end_date));
+
+        $result = array();
+
+        $oauth_result = $this->util->oAuthTokenGenerator();
+        $is_error = $this->util->isFoundOAuthTokenError($oauth_result);
+
+        // Error found.
+        if ($is_error === true) {
+            $this->logger->log('process_payment(): $is_error');
+            $this->logger->log($this->util->getFoundOAuthTokenError($oauth_result));
+            $this->logger->log($oauth_result['response']);
+            $result['error_message'] = __("Couldn't create a PayTrace connection. Please contact administrator", 'yips-customization');
+            return $result;
+        }
+
+        $json = (Helper::instance())->jsonDecode($oauth_result['temp_json_response']);
+        $oauth_token = sprintf("Bearer %s", $json['access_token']);
+
+        $headers = array(
+            'Content-type' => 'application/json',
+            'Authorization' => $oauth_token
+        );
+
+        $request_data = array(
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'include_bin' => true,
+            'integrator_id' => $this->config['integrator_id']
+        );
+
+        $request_data = json_encode($request_data);
+
+        $response = wp_remote_post(
+            URL_EXPORT_BY_DATE_RANGE,
+            array(
+                'method'      => 'POST',
+                'timeout'     => 45,
+                'redirection' => 5,
+                'httpversion' => '1.1',
+                'blocking'    => true,
+                'sslverify'    => false,
+                'headers'     => $headers,
+                'body'        => $request_data
+            )
+        );
+
+        if (is_wp_error($response)) {
+            $result['error_message'] = $response->get_error_message();
+            return $result;
+        } else {
+            $json = wp_remote_retrieve_body($response);
+            $api_result = (Helper::instance())->jsonDecode($json);
+
+            if ($api_result['success'] != 1) {
+                $result['error_message'] = $api_result['status_message'];
+                return $result;
+            } else {
+                $result['error_message'] = '';
+                $result['exported_transactions'] = $api_result['transactions'];
+                $result['response'] = $response;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -78,7 +159,7 @@ class PayTrace extends Singleton
         $json = (Helper::instance())->jsonDecode($oauth_result['temp_json_response']);
         $oauth_token = sprintf("Bearer %s", $json['access_token']);
 
-        // Protect oauth to genreate key
+        // Protect oauth to generate key
         $api_result = $this->util->ProtectAuthTokenGenerator($oauth_token);
         $response = $api_result['response'];
 
@@ -161,7 +242,7 @@ class PayTrace extends Singleton
     }
 
     /**
-     * Save info on successfull transaction.
+     * Save info on successful transaction.
      *
      * @param array $transaction_result
      */
@@ -244,9 +325,13 @@ class PayTrace extends Singleton
         $convenience_fee = 0;
 
         $invoices = $_POST['invoice'];
-        foreach ($invoices as $invoice) {
+        $invoice_numbers = array();
+        foreach ($invoices as $inv_num => $invoice) {
             $invoice_amount = $invoice_amount + $invoice;
+            $invoice_numbers[] = $inv_num;
         }
+
+        $invoice_numbers = implode(',', $invoice_numbers);
 
         $invoice_amount = number_format($invoice_amount, 2, '.', '');
         $convenience_fee = 0.03 * $invoice_amount;
@@ -263,6 +348,11 @@ class PayTrace extends Singleton
             "hpf_token" => $hpf_token,
             "enc_key" => $enc_key,
             "integrator_id" => $this->config['integrator_id'],
+            'discretionary_data' => array(
+                'Invoice Numbers' => $invoice_numbers,
+                'Sage Customer ID' => $customer['CustomerNo'],
+                'WP User ID' => get_current_user_id(),
+            ),
             "billing_address" => array(
                 "name" => ($customer['CustomerName']) ?: '',
                 "street_address" => ($customer['AddressLine1']) ?: '',
@@ -273,7 +363,7 @@ class PayTrace extends Singleton
             )
         );
 
-        // log requested data. remove senstive info.
+        // log requested data. remove sensitive info.
         $temp_request_data = $request_data;
         unset($temp_request_data['enc_key']);
         unset($temp_request_data['HPF_Token']);
@@ -307,7 +397,7 @@ class PayTrace extends Singleton
         }
 
         //If we reach here, we have been able to communicate with the service,
-        //next is decode the json response and then review Http Status code, response_code and success of the response
+        //next is decode the JSON response and then review HTTP Status code, response_code and success of the response
 
         $json = (Helper::instance())->jsonDecode($trans_result['temp_json_response']);
 
@@ -330,7 +420,8 @@ class PayTrace extends Singleton
         } else {
             // Do your code when Response is available and based on the response_code.
             // Please refer PayTrace-Error page for possible errors and Response Codes
-            // For transation successfully approved
+            // For transaction successfully approved
+            //if ($json['success'] == true && ($json['response_code'] == 101 || $json['response_code'] == 165 || $json['response_code'] == 167)) {
             if ($json['success'] == true && $json['response_code'] == 101) {
                 $result['error_message'] = '';
                 $result['transaction_success'] = true;
