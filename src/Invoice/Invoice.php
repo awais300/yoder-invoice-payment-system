@@ -197,7 +197,7 @@ class Invoice extends Singleton
     }
 
     /**
-     * Get customer addresss separately or formatted.
+     * Get customer address separately or formatted.
      * 
      * @param  array  $customer
      * @param  boolean $concat
