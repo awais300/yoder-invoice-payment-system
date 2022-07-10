@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
 class Utilities extends Singleton
 {
     /**
-     * This function will make a request to accuire the OAuth token
+     * This function will make a request to acquire the OAuth token
      * Returns an array with Json response, Curl_error and http status code of the request.
      *
      * @return array
@@ -72,7 +72,7 @@ class Utilities extends Singleton
     /**
      * This function will make a request by sending the OAuth token in header
      * Returns an array with Json response, Curl_error and http status code of the request.
-     * Respone also contains the client key.
+     * Response also contains the client key.
      * 
      * @param string $oauth_token
      * @return array
