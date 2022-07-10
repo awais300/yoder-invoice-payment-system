@@ -154,7 +154,7 @@ class Helper extends Singleton
 
 
     /**
-     * Convert XML to JSON
+     * Convert XML to JSON.
      *
      * @param SimpleXMLElement $xml The root node
      * @param array $options Associative array of options
@@ -168,14 +168,14 @@ class Helper extends Singleton
     }
 
     /**
-     * Convert JSON string to Array
+     * Convert JSON string to Array.
      *
      * @param JSON $json_string
      * @return Array
      */
     public function jsonDecode($json_string)
     {
-        //Decode the Json Response.
+        //Decode the JSON Response.
         if (empty($json_string)) {
             return null;
         } else {
@@ -185,14 +185,14 @@ class Helper extends Singleton
     }
 
     /**
-     * Convert Array to JSON string
+     * Convert Array to JSON string.
      *
      * @param array $array
      * @return JSON
      */
     public function jsonEncode($array)
     {
-        //Encode the Json Response.
+        //Encode the JSON Response.
         $json = json_encode($array);
         return $json;
     }
