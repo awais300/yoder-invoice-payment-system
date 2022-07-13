@@ -26,7 +26,7 @@ function PTPaymentForm(e) {
             var e = document.getElementById("pt_hpf_form");
             if (e) {
                 const t = this.HPF_CASPER_DOMAIN + this.HPF_CASPER_URI;
-                e.innerHTML = "<div><input id='pt_hpf_input' type='hidden'></input><iframe id='hpf_casper' src='' style='border: transparent;width: 100%;height: 200px'> </iframe> </div>", document.getElementById("hpf_casper").src = t
+                e.innerHTML = "<div><input id='pt_hpf_input' type='hidden'></input><iframe id='hpf_casper' src='' style='border: transparent;width: 100%;height: auto'> </iframe> </div>", document.getElementById("hpf_casper").src = t
             } else console.error("[PTKIBOSH] PayTrace HPF div 'pt_hpf_form' not found. Please ensure a div with id 'pt_hpf_form' is setup on the host site")
         }
     }, this.validateHPF = function() {
