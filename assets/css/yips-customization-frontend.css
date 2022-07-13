@@ -80,6 +80,10 @@
     color: #000;
 }
 
+#yoder-pay-online .ytable h2.sub-heading {
+    margin-top: 25px;
+}
+
 #yoder-pay-online .table-info {
     margin-bottom: 15px;
 }
@@ -110,16 +114,12 @@
 }
 
 #yoder-pay-online .table-bottom {
-    display: flex;
-    text-align: right;
-    justify-content: center;
-    align-content: center;
     margin: 45px;
+    margin-left: 0;
+    margin-top: 20px;
 }
 
-#yoder-pay-online .table-bottom .yfee {
-    padding: 0 25px;
-}
+#yoder-pay-online .table-bottom .yfee {}
 
 #yoder-pay-online .table-bottom .cfee p {
     font-size: 14px;
@@ -232,11 +232,7 @@ input[type=checkbox]:checked::before {
     opacity: 1;
 }
 
-#yoder-pay-online .paytrace-form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+#yoder-pay-online .paytrace-form {}
 
 
 @media screen and (max-width: 600px) {
