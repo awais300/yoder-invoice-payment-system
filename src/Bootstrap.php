@@ -105,14 +105,16 @@ class Bootstrap
 	 */
 	public function init()
 	{
+		new Config();
+		new Rosetta();
 		new UserMeta();
 		new UserLogin();
 		new Invoice();
 		new PayTraceSettings();
 
-		if(is_admin()) {
+		if (is_admin()) {
 			new ExportTransactions();
-		}	
+		}
 	}
 
 	/**
@@ -120,8 +122,12 @@ class Bootstrap
 	 */
 	public function enqueue_styles()
 	{
-		wp_enqueue_style('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/yips-customization-frontend.css', array(), null, 'all');
-		wp_enqueue_style('yips-w3', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/w3.css', array(), null, 'all');
+		global $post;
+		if ($post->post_name == Invoice::CUSTOMER_INVOICE_PAGE) {
+			wp_enqueue_style('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/yips-customization-frontend.css', array(), null, 'all');
+			wp_enqueue_style('yips-w3', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/w3.css', array(), null, 'all');
+			wp_enqueue_style('wp-jquery-ui-dialog');
+		}
 	}
 
 
@@ -130,8 +136,12 @@ class Bootstrap
 	 */
 	public function enqueue_scripts()
 	{
-		wp_enqueue_script('yips-customization-frontend-paytrace-protect', YIPS_CUST_PLUGIN_DIR_URL . '/assets/js/protect.js');
-		wp_enqueue_script('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/js/yips-customization-frontend.js', array('jquery'));
+		global $post;
+		if ($post->post_name == Invoice::CUSTOMER_INVOICE_PAGE) {
+			wp_enqueue_script('yips-customization-frontend-paytrace-protect', YIPS_CUST_PLUGIN_DIR_URL . '/assets/js/protect.js');
+			wp_enqueue_script('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/js/yips-customization-frontend.js', array('jquery'), false, true);
+			wp_enqueue_script('jquery-ui-dialog');
+		}
 	}
 
 	/**
