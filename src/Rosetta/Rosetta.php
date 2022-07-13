@@ -40,7 +40,7 @@ class Rosetta extends Singleton
         $this->logger = WPLogger::instance();
 
         // Debug
-        if (isset($_GET['yoder_api_debug'])) {
+        if (@isset($_GET['yoder_api_debug'])) {
             $test = $this->test();
             dd($test);
             exit();
@@ -60,27 +60,25 @@ class Rosetta extends Singleton
           <xml>
             <ExtSourceID>YODERWEB</ExtSourceID>
             <ARDivisionNo>00</ARDivisionNo>
-            <CustomerNo>0000014</CustomerNo>
-            <AdditionalFields>UDF_ACCOUNT_TYPE$</AdditionalFields>
+            <CustomerNo>0001067</CustomerNo>
+            <AdditionalFields>UDF_CUSTCAT</AdditionalFields>
           </xml>
         </rosetta>";
 
-        echo "Request";
-        echo $xml;
-        echo "<br/>";
-
-
         $response = $this->yoder_remote_get($xml);
 
-        //dd($response);
+        dd($response);
 
         $xml = $response['response'];
-        echo $xml;
-        exit;
         $xml = @simplexml_load_string($xml);
-        /*if ($xml === false) {
+        if ($xml === false) {
+            foreach (libxml_get_errors() as $error) {
+                echo "<br>", $error->message;
+            }
+            exit('in false');
             throw new \Exception('Invalid XML response');
-        }*/
+        }
+
         $xml_array = (Helper::instance())->xmlToArray($xml);
         return $xml_array;
     }
@@ -190,6 +188,7 @@ class Rosetta extends Singleton
                         <ExtSourceID>YODERWEB</ExtSourceID>
                         <ARDivisionNo>00</ARDivisionNo>
                         <CustomerNo>{$customer_id}</CustomerNo>
+                        <AdditionalFields>UDF_CUSTCAT</AdditionalFields>
                       </xml>
                 </rosetta>";
 
