@@ -16,8 +16,11 @@ class Config extends Singleton
 {
     public function __construct()
     {
-        //echo Cryptor::encrypt('text_goes_here'); echo "<br/>";
-        //exit;
+        // Debug
+        if (@isset($_GET['yoder_api_debug'])) {
+            //echo Cryptor::encrypt('text_goes_here'); echo "<br/>";
+            //exit;
+        }
     }
 
     /**
@@ -36,7 +39,7 @@ class Config extends Singleton
             ],
             'paytrace' => [
                 'username' => Cryptor::decrypt('Hb0Yd9Db58dGmRal5SnvsARUsdMT0QPOcKfkGQMQr2Sy2dW2KyiLMq2oMWvQ0IvJreCxHcpuka/Xodz9XWEhATw='),
-                'password' => Cryptor::decrypt('1oUiZoso9JsElIaLbJJ0SKCXPxpLbX8l0Tp9RmFTJ0NKIQ5wZl1QKQ5z/wEckSUOtjO7'),
+                'password' => Cryptor::decrypt('7W4pZ98mtUJVOwu5EZkcTbjaG+sm3AuaNAWgBV6C6zXw1CHMSiebpobVnvByQ3XYtyo='),
                 'integrator_id' => '967174xd2CvC'
             ]
         ];
