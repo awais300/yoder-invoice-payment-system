@@ -74,7 +74,7 @@ class PayTrace extends Singleton
 
         // Error found.
         if ($is_error === true) {
-            $this->logger->log('process_payment(): $is_error');
+            $this->logger->log('get_transactions_by_date_range(): $is_error');
             $this->logger->log($this->util->getFoundOAuthTokenError($oauth_result));
             $this->logger->log($oauth_result['response']);
             $result['error_message'] = __("Couldn't create a PayTrace connection. Please contact administrator", 'yips-customization');
@@ -320,6 +320,12 @@ class PayTrace extends Singleton
         $customer = (Rosetta::instance())->get_customer();
         $customer = array_filter($customer['customer']);
 
+        // Find customer category/class.
+        $customer_cat = '';
+        if (isset($customer['UDF_CUSTCAT'])) {
+            $customer_cat = trim($customer['UDF_CUSTCAT']);
+        }
+
 
         $invoice_amount = 0;
         $convenience_fee = 0;
@@ -339,12 +345,18 @@ class PayTrace extends Singleton
         $amount_with_convenience_fee = $invoice_amount + $convenience_fee;
         $amount_with_convenience_fee = number_format($amount_with_convenience_fee, 2, '.', '');
 
+        if($customer_cat === 'D') {
+            $final_amount = $amount_with_convenience_fee;
+        } else {
+            $final_amount = $invoice_amount;
+        }
+
 
         $hpf_token = $_POST['HPF_Token'];
         $enc_key = $_POST['enc_key'];
         //$amount = $_POST['amount'];
         $request_data = array(
-            "amount" => $amount_with_convenience_fee,
+            "amount" => $final_amount,
             "hpf_token" => $hpf_token,
             "enc_key" => $enc_key,
             "integrator_id" => $this->config['integrator_id'],
