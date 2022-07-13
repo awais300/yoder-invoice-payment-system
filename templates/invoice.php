@@ -2,7 +2,25 @@
     <script>
         window.location.replace('<?php echo '/' . $thankyou_page; ?>');
     </script>
+    <script>
+        const YODER_YIPS = {
+            customer_cat: ''
+        };
+    </script>
 <?php endif; ?>
+
+<?php
+$customer_cat = '';
+if ($invoice_obj->has_customer($customer)) {
+    $customer_data = $customer['customer'];
+    if (isset($customer_data['UDF_CUSTCAT'])) {
+        $customer_cat = $customer_data['UDF_CUSTCAT'];
+    }
+    $customer_cat = trim($customer_cat);
+    echo "<script>const YODER_YIPS = { customer_cat: '{$customer_cat}' };</script>";
+}
+?>
+
 <div id="title" style="display: none;">
     <div class="container">
         <div class="ten columns">
@@ -58,12 +76,13 @@
                     if (!$invoice_obj->has_error($invoices) && $invoice_obj->has_invoice($invoices)) :
                         foreach ($invoices['invoices'] as $invoice) :
                             $invoice_num = $invoice['InvoiceNo'];
-                            $invoice_amount = number_format($invoice['Amount'], 2, '.', '');
+                            $invoice_amount = $invoice['Amount'];
+                            $invoice_amount_formatted = number_format($invoice['Amount'], 2, '.', ',');
                     ?>
                             <tr class="table-data">
                                 <td><input class="invoice-box" type="checkbox" name="invoice[<?php echo $invoice_num; ?>]" value="<?php echo esc_attr($invoice_amount); ?>" class="invoice"></td>
                                 <td>#<?php echo esc_html($invoice_num); ?></td>
-                                <td><?php echo esc_html($invoice_amount);  ?></td>
+                                <td><?php echo esc_html($invoice_amount_formatted);  ?></td>
                             </tr>
                         <?php
                         endforeach;
@@ -80,11 +99,14 @@
             </div>
 
             <?php if ($invoice_obj->has_invoice($invoices)) : ?>
+                <h2 class="sub-heading"><?php _e('Pay selected invoices online', 'yips-customization'); ?></h2>
                 <div class="table-bottom">
                     <div class="bottom-content">
-                        <div id="cfee" class="cfee yfee">
-                            <p><?php _e('3% Convenience Fee: ', 'yips-customization'); ?><span>0</span></p>
-                        </div>
+                        <?php if ($customer_cat === 'D') : ?>
+                            <div id="cfee" class="cfee yfee">
+                                <p><?php _e('3% Convenience Fee: ', 'yips-customization'); ?><span>0</span></p>
+                            </div>
+                        <?php endif; ?>
                         <div id="total-fee" class="fee yfee">
                             <p><?php _e('Total: '); ?><span>0</span></p>
                         </div>
@@ -109,10 +131,11 @@
                                         'font_size': '13pt',
                                         'label_size': '17px',
                                         'height': '26px',
-                                        'width': '64px'
+                                        'width': '75px'
                                     },
                                     'cc': {
                                         'font_color': '#323232',
+                                        'input_margin': '0 0 10px 0',
                                         'border_color': '#ccc',
                                         'label_color': '#000',
                                         'label_size': '20px',
@@ -135,7 +158,7 @@
                                         'font_size': '13pt',
                                         'label_size': '17px',
                                         'height': '30px',
-                                        'width': '64px',
+                                        'width': '75px',
                                         'type': 'dropdown'
                                     }
                                 },
@@ -143,9 +166,10 @@
                                     'clientKey': "<?php echo $client_key; ?>"
                                 }
                             }).then(function(instance) {
-                                PTPayment.getControl("securityCode").label.text("CSC");
-                                PTPayment.getControl("creditCard").label.text("CC#");
+                                PTPayment.getControl("securityCode").label.text("Card Code");
+                                PTPayment.getControl("creditCard").label.text("Card Number");
                                 PTPayment.getControl("expiration").label.text("Exp Date");
+
                                 //PTPayment.style({'cc': {'label_color': 'red'}});
                                 //PTPayment.style({'code': {'label_color': 'red'}});
                                 //PTPayment.style({'exp': {'label_color': 'red'}});
@@ -161,11 +185,29 @@
                                     PTPayment.validate(function(validationErrors) {
                                         if (validationErrors.length >= 1) {
                                             if (validationErrors[0]['responseCode'] == '35') {
-                                                // Handle validation Errors here
-                                                // This is an example of using dynamic styling to show the Credit card number entered is invalid
-                                                instance.style({
+                                                PTPayment.style({
                                                     'cc': {
                                                         'border_color': 'red'
+                                                    }
+                                                });
+                                            } else {
+                                                PTPayment.style({
+                                                    'cc': {
+                                                        'border_color': '#ccc'
+                                                    }
+                                                });
+                                            }
+
+                                            if (validationErrors[0]['responseCode'] == '44' || validationErrors[0]['responseCode'] == '43') {
+                                                PTPayment.style({
+                                                    'exp': {
+                                                        'border_color': 'red'
+                                                    }
+                                                });
+                                            } else {
+                                                PTPayment.style({
+                                                    'exp': {
+                                                        'border_color': '#ccc'
                                                     }
                                                 });
                                             }
