@@ -30,7 +30,7 @@ class CardDetector extends Singleton
         //maximum length is not fixed now, there are growing number of CCs has more numbers in length, limiting can give false negatives atm
 
         //these regexps accept not whole cc numbers too
-        
+
         //visa
         $visa_regex = "/^4[0-9]{0,}$/";
         $vpreca_regex = "/^428485[0-9]{0,}$/";
