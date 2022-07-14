@@ -115,6 +115,7 @@ class Invoice extends Singleton
             'thankyou_page' => self::THANK_YOU_PAGE,
             'invoices' => $invoices,
             'customer' => $customer,
+            'logout_url' => wp_logout_url('/' . self::CUSTOMER_LOGIN_PAGE),
         );
 
         $html = $this->loader->get_template(
@@ -137,7 +138,7 @@ class Invoice extends Singleton
 
         $data = array(
             'main_screen_url' => '/' . self::CUSTOMER_INVOICE_PAGE,
-            'logout_url' => wp_login_url('/' . self::CUSTOMER_LOGIN_PAGE),
+            'logout_url' => wp_logout_url('/' . self::CUSTOMER_LOGIN_PAGE),
         );
         $html = $this->loader->get_template(
             'thank-you.php',
