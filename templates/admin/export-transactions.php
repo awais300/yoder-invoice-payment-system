@@ -21,7 +21,7 @@ $next_day = date('Y-m-d', strtotime($today . ' +1 day'));
 				</tr>
 
 				<tr>
-					<th scope="row"><label for="end_date"><?php _e('Start date', 'yips-customization'); ?></label></th>
+					<th scope="row"><label for="end_date"><?php _e('End date', 'yips-customization'); ?></label></th>
 					<td><input required type="date" name="end_date" type="text" id="end_date" value="<?php echo $next_day; ?>"></td>
 				</tr>
 				<tr>
