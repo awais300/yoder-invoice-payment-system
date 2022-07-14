@@ -111,6 +111,7 @@ class Bootstrap
 		new UserLogin();
 		new Invoice();
 		new PayTraceSettings();
+		new Test();
 
 		if (is_admin()) {
 			new ExportTransactions();
