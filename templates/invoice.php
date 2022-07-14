@@ -2,11 +2,6 @@
     <script>
         window.location.replace('<?php echo '/' . $thankyou_page; ?>');
     </script>
-    <script>
-        const YODER_YIPS = {
-            customer_cat: ''
-        };
-    </script>
 <?php endif; ?>
 
 <?php
@@ -47,6 +42,7 @@ if ($invoice_obj->has_customer($customer)) {
                     </div>
                 </div>
             </div>
+            <div class="ycolumn last"><a href="<?php echo esc_url($logout_url); ?>">Logout</a></div>
         </div>
     <?php endif; ?>
     <?php if ($invoice_obj->has_error($customer)) : ?>
@@ -180,6 +176,7 @@ if ($invoice_obj->has_customer($customer)) {
                                 document.getElementById("ProtectForm").addEventListener("submit", function(e) {
                                     e.preventDefault();
                                     e.stopPropagation();
+                                    disable_btn();
 
                                     // To trigger the validation of sensitive data payment fields within the iframe before calling the tokenization process:
                                     PTPayment.validate(function(validationErrors) {
@@ -190,6 +187,7 @@ if ($invoice_obj->has_customer($customer)) {
                                                         'border_color': 'red'
                                                     }
                                                 });
+                                                enable_btn();
                                             } else {
                                                 PTPayment.style({
                                                     'cc': {
@@ -204,6 +202,7 @@ if ($invoice_obj->has_customer($customer)) {
                                                         'border_color': 'red'
                                                     }
                                                 });
+                                                enable_btn();
                                             } else {
                                                 PTPayment.style({
                                                     'exp': {
@@ -227,17 +226,28 @@ if ($invoice_obj->has_customer($customer)) {
 
 
                             function handleError(err) {
+                                enable_btn();
                                 alert(JSON.stringify(err));
                             }
 
                             function submitPayment(r) {
-
                                 var hpf_token = document.getElementById("HPF_Token");
                                 var enc_key = document.getElementById("enc_key");
                                 hpf_token.value = r.message.hpf_token;
                                 enc_key.value = r.message.enc_key;
                                 document.getElementById("ProtectForm").submit();
+                            }
 
+                            function disable_btn() {
+                                var btn = document.getElementById('SubmitButton');
+                                btn.disabled = true;
+                                btn.classList.add('btn_disable');
+                            }
+
+                            function enable_btn() {
+                                var btn = document.getElementById('SubmitButton');
+                                btn.disabled = false;
+                                btn.classList.remove('btn_disable');
                             }
                         </script>
                     </div>
