@@ -162,7 +162,7 @@ if ($invoice_obj->has_customer($customer)) {
                                     'clientKey': "<?php echo $client_key; ?>"
                                 }
                             }).then(function(instance) {
-                                PTPayment.getControl("securityCode").label.text("Card Code");
+                                PTPayment.getControl("securityCode").label.text("CVV/CVC/CSC");
                                 PTPayment.getControl("creditCard").label.text("Card Number");
                                 PTPayment.getControl("expiration").label.text("Exp Date");
 
