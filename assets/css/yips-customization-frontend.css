@@ -127,7 +127,9 @@
 #yoder-pay-online .table-bottom .yfee {}
 
 #yoder-pay-online .table-bottom .cfee p {
-    font-size: 14px;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: bold;
 }
 
 #yoder-pay-online .table-bottom .cfee span {
