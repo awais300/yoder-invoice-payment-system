@@ -25,7 +25,7 @@ jQuery(document).ready(function($) {
         $('#yoder-pay-online .invoice-box').each(
             function(i, obj) {
                 $this = $(this);
-                var value = $this.val();
+                var value = Number($this.val());
                 let is_checked = $this.is(':checked');
 
                 if (is_checked === true) {
