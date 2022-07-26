@@ -9,6 +9,7 @@ use Yoder\YIPS\Rosetta\Rosetta;
 use Yoder\YIPS\User\UserLogin;
 use Yoder\YIPS\User\UserMeta;
 use Yoder\YIPS\Admin\ExportTransactions;
+use Yoder\YIPS\Cron\Cron;
 
 defined('ABSPATH') || exit;
 
@@ -112,10 +113,8 @@ class Bootstrap
 		new Invoice();
 		new PayTraceSettings();
 		new Test();
-
-		if (is_admin()) {
-			new ExportTransactions();
-		}
+		new ExportTransactions();
+		new Cron();
 	}
 
 	/**
