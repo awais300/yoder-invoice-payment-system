@@ -51,7 +51,7 @@ class Cron extends Singleton
     {
         // Same day date so $date would be start date and end date as well.
         $date = date('m/d/Y');
-        $date = '7/12/2022'; // For testing.
+        //$date = '7/12/2022'; // For testing.
         $file_date = date('m-d-Y', strtotime($date));
         $file_path = wp_get_upload_dir()['basedir'] . "/transactions-export-{$file_date}.csv";
         $download_csv = false;
