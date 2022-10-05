@@ -10,6 +10,7 @@ use Yoder\YIPS\User\UserMeta;
 use Yoder\YIPS\Rosetta\Rosetta;
 use Yoder\YIPS\Config;
 use Yoder\YIPS\Schema;
+use Yoder\YIPS\TemplateLoader;
 
 defined('ABSPATH') || exit;
 
@@ -28,6 +29,13 @@ class PayTrace extends Singleton
     private $config = null;
 
     /**
+     * The template loader.
+     *
+     * @var $loader
+     */
+    private $loader = null;
+
+    /**
      * Log information to file.
      *
      * @var $logger
@@ -42,10 +50,19 @@ class PayTrace extends Singleton
     private $util = null;
 
     /**
+     * Holds HTTP request data .
+     *
+     * @var $request_data
+     */
+    private $request_data = array();
+
+
+    /**
      * Construct the plugin.
      */
     public function __construct()
     {
+        $this->loader = TemplateLoader::instance();
         $this->config = (Config::instance())->get_config('paytrace');
         $this->logger = WPLogger::instance();
         $this->util = Utilities::instance();
@@ -272,6 +289,9 @@ class PayTrace extends Singleton
         $invoices['user_id'] = get_current_user_id();
         (UserMeta::instance())->save_user_invoice_data(get_current_user_id(), $invoices);
 
+        // Send email to customer.
+        $this->send_invoice_to_customer_email($invoices);
+
         // Redirect to thank you page.
         wp_redirect(('/' . Invoice::THANK_YOU_PAGE));
         exit;
@@ -299,6 +319,44 @@ class PayTrace extends Singleton
 
         $format = array('%d', '%s', '%s', '%s');
         $wpdb->insert($table, $data, $format);
+    }
+
+    /**
+     * Send email to customer with invoice details.
+     **/
+    public function send_invoice_to_customer_email($invoices)
+    {
+        if (empty($invoices['invoice'])) {
+            return;
+        }
+
+        $user = get_userdata(get_current_user_id());
+        if (empty($user)) {
+            return;
+        }
+
+        $to = $user->user_email;
+        $subject = 'Receipt - Yoder Oil Invoice(s) Paid';
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: YoderOil <no-reply@yoderoil.com>',
+        );
+
+        $data = array(
+            'user' => $user,
+            'invoices' => $invoices['invoice'],
+            'request_data' => $this->request_data,
+            'date' => date('M d, Y'),
+        );
+
+        $body = $this->loader->get_template(
+            'customer-invoice-details.php',
+            $data,
+            YIPS_CUST_PLUGIN_DIR_PATH . '/templates/email/',
+            false
+        );
+
+        wp_mail($to, $subject, $body, $headers);
     }
 
     /**
@@ -348,7 +406,7 @@ class PayTrace extends Singleton
         $amount_with_convenience_fee = $invoice_amount + $convenience_fee;
         $amount_with_convenience_fee = number_format($amount_with_convenience_fee, 2, '.', '');
 
-        if($customer_cat === 'D') {
+        if ($customer_cat === 'D') {
             $final_amount = $amount_with_convenience_fee;
         } else {
             $final_amount = $invoice_amount;
@@ -361,7 +419,7 @@ class PayTrace extends Singleton
         $request_data = array(
             "amount" => $final_amount,
             "hpf_token" => $hpf_token,
-            "invoice_id" => uniqid(),
+            //"invoice_id" => uniqid(),
             "enc_key" => $enc_key,
             "integrator_id" => $this->config['integrator_id'],
             'discretionary_data' => array(
@@ -387,7 +445,9 @@ class PayTrace extends Singleton
         $this->logger->log($temp_request_data);
         unset($temp_request_data);
 
-        $request_data = json_encode($request_data);
+        $this->request_data = $request_data;
+
+        $request_data = json_encode($this->request_data);
         return $request_data;
     }
 
