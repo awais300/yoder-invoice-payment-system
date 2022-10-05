@@ -3,12 +3,34 @@ jQuery(document).ready(function($) {
         total = calculate_total_fee();
         display_totals(total);
 
+        main_checkbox_toggle();
+
         $this = $(this);
         if ($this.is(':checked') === true) {
             box_checked($this);
         } else {
             box_unchecked($this);
         }
+    });
+
+    // Listen for click on toggle checkbox
+    $(document).on('click', '#yoder-pay-online #select-all', function(e) {
+        if (this.checked) {
+            $(':checkbox').each(function() {
+                this.checked = true;
+                $this = $(this);
+                box_checked($this);
+            });
+        } else {
+            $(':checkbox').each(function() {
+                this.checked = false;
+                $this = $(this);
+                box_unchecked($this);
+            });
+        }
+
+        total = calculate_total_fee();
+        display_totals(total);
     });
 
     $(document).on('click', '#SubmitButton', function(e) {
@@ -35,6 +57,31 @@ jQuery(document).ready(function($) {
         );
 
         return total;
+    }
+
+    function main_checkbox_toggle() {
+        $check_boxes = $('#yoder-pay-online .invoice-box');
+        let checkbox_count = $check_boxes.length;
+
+        var total = 0;
+        $check_boxes.each(
+            function(i, obj) {
+                $this = $(this);
+                let is_checked = $this.is(':checked');
+
+                if (is_checked === true) {
+                    total = total + 1;
+                }
+            }
+        );
+
+        if (checkbox_count > total) {
+            $('#yoder-pay-online #select-all').prop('checked', false);
+        }
+
+        if (checkbox_count == total) {
+            $('#yoder-pay-online #select-all').prop('checked', true);
+        }
     }
 
     function display_totals(total) {
