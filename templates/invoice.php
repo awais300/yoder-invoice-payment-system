@@ -19,7 +19,8 @@ if ($invoice_obj->has_customer($customer)) {
 <div id="title" style="display: none;">
     <div class="container">
         <div class="ten columns">
-            <h1><?php the_title(); ?></h1>
+            <h1><?php //the_title(); 
+                ?></h1>
         </div>
     </div>
 </div>
@@ -64,8 +65,9 @@ if ($invoice_obj->has_customer($customer)) {
             <div class="w3-responsive">
                 <table class="w3-bordered">
                     <tr class="heading">
-                        <td></td>
+                        <td class="all-toggle"><input type="checkbox" id="select-all" name="select-all"><?php _e('Select All', 'yips-customization'); ?></td>
                         <td><?php _e('Invoice', 'yips-customization'); ?></td>
+                        <td><?php _e('Due Date', 'yips-customization'); ?></td>
                         <td><?php _e('Amount Due', 'yips-customization'); ?></td>
                     </tr>
                     <?php
@@ -73,11 +75,13 @@ if ($invoice_obj->has_customer($customer)) {
                         foreach ($invoices['invoices'] as $invoice) :
                             $invoice_num = $invoice['InvoiceNo'];
                             $invoice_amount = $invoice['Amount'];
+                            $invoice_due_date = $invoice['InvoiceDueDate'];
                             $invoice_amount_formatted = number_format($invoice['Amount'], 2, '.', ',');
                     ?>
                             <tr class="table-data">
                                 <td><input class="invoice-box" type="checkbox" name="invoice[<?php echo $invoice_num; ?>]" value="<?php echo esc_attr($invoice_amount); ?>" class="invoice"></td>
                                 <td>#<?php echo esc_html($invoice_num); ?></td>
+                                <td><?php echo esc_html($invoice_obj->get_formatted_date($invoice_due_date)); ?></td>
                                 <td><?php echo esc_html($invoice_amount_formatted);  ?></td>
                             </tr>
                         <?php
