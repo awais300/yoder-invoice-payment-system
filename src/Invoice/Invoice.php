@@ -102,7 +102,9 @@ class Invoice extends Singleton
     {
         // PayTrace data.
         $client_key = (PayTrace::instance())->get_client_key();
-        $payment = (PayTrace::instance())->process_payment();
+
+        $paytrace = new PayTrace;
+        $payment = $paytrace->process_payment();
 
         // Rosetta/PDI data.
         $invoices = (Rosetta::instance())->get_due_invoices();
@@ -227,5 +229,16 @@ class Invoice extends Singleton
         } else {
             $customer['AddressLine1'] . '<br/>' . $customer['AddressLine2'] . '<br/>' . $customer['AddressLine3'];
         }
+    }
+
+    /**
+     * Format the date.
+     *
+     * @param string $date
+     * @return string
+     **/
+    public function get_formatted_date($date)
+    {
+        return date("M d, Y", strtotime($date));
     }
 }
