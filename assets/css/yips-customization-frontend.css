@@ -146,7 +146,8 @@
     font-weight: bold;
 }
 
-#yoder-pay-online .button-submit {
+#yoder-pay-online .button-submit,
+.tml-button {
     background: #ca1631;
     color: #ffffff;
     box-shadow: none;
@@ -233,6 +234,26 @@ input[type=checkbox]:checked:focus {
     background: #ffffff;
 }
 
+input[type='submit'] {
+    background: #ca1631;
+    border-color: #ca1631;
+    color: #ffffff;
+    box-shadow: none;
+    font-size: 13px;
+    line-height: 13px;
+    padding: 12px 20px 12px 20px;
+    text-decoration: none;
+    outline: 0;
+    margin: 0 5px 5px 0;
+    font-weight: bold;
+    display: inline-block;
+    -webkit-transition: all 0.07s ease-in;
+    -moz-transition: all 0.07s ease-in;
+    -ms-transition: all 0.07s ease-in;
+    -o-transition: all 0.07s ease-in;
+    transition: all 0.07s ease-in;
+}
+
 input[type=checkbox]:checked:hover {
     color: #fff;
     border-color: #ca1631;
@@ -244,6 +265,25 @@ input[type=checkbox]:checked::before {
 }
 
 #yoder-pay-online .paytrace-form {}
+
+.login-details {
+    width: 100%;
+    display: flex;
+}
+
+.login-details h3 {
+    margin-top: -34px;
+}
+
+.login-details label {
+    font-weight: 100 !important;
+    width: 100% !important;
+}
+
+.login-details .login-col {
+    padding: 20px;
+    width: 50%;
+}
 
 
 @media screen and (max-width: 600px) {
@@ -267,6 +307,20 @@ input[type=checkbox]:checked::before {
     #yoder-pay-online .table-bottom .yfee {
         text-align: center;
     }
+
+    .login-details {
+        display: block;
+    }
+
+    .login-details h3 {
+        margin-top: 0;
+    }
+
+
+    .login-details .login-col {
+        width: 100%;
+    }
+
 }
 
 @media screen and (max-width: 484px) {
