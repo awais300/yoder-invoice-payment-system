@@ -169,7 +169,7 @@
     border: 1px solid #000;
 }
 
-#yoder-pay-online tr.table-data td:nth-child(3)::before {
+#yoder-pay-online tr.table-data td:nth-child(4)::before {
     content: "$";
 }
 
@@ -285,6 +285,9 @@ input[type=checkbox]:checked::before {
     width: 50%;
 }
 
+#yoder-pay-online tr.heading td.all-toggle {
+    width: 120px;
+}
 
 @media screen and (max-width: 600px) {
     #yoder-pay-online .ycolumn {
