@@ -60,7 +60,9 @@ class PayTrace extends Singleton
     public function get_transactions_by_date_range($start_date, $end_date)
     {
         if (empty($start_date) || empty($end_date)) {
-            throw new \Exception(__('Start date and end date is required', 'yips-customization'));
+            $this->logger->log('get_transactions_by_date_range()');
+            $this->logger->log('start_date or end_date is missing');
+            return;
         }
 
         // Convert date format that API accepts.
@@ -114,6 +116,7 @@ class PayTrace extends Singleton
 
         if (is_wp_error($response)) {
             $result['error_message'] = $response->get_error_message();
+            $result['response'] = $response;
             return $result;
         } else {
             $json = wp_remote_retrieve_body($response);
@@ -358,6 +361,7 @@ class PayTrace extends Singleton
         $request_data = array(
             "amount" => $final_amount,
             "hpf_token" => $hpf_token,
+            "invoice_id" => uniqid(),
             "enc_key" => $enc_key,
             "integrator_id" => $this->config['integrator_id'],
             'discretionary_data' => array(

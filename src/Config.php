@@ -19,7 +19,6 @@ class Config extends Singleton
         // Debug
         if (@isset($_GET['yoder_api_debug'])) {
             //echo Cryptor::encrypt('text_goes_here'); echo "<br/>";
-            //exit;
         }
     }
 
@@ -38,9 +37,9 @@ class Config extends Singleton
                 'port' => 55555
             ],
             'paytrace' => [
-                'username' => Cryptor::decrypt('Hb0Yd9Db58dGmRal5SnvsARUsdMT0QPOcKfkGQMQr2Sy2dW2KyiLMq2oMWvQ0IvJreCxHcpuka/Xodz9XWEhATw='),
-                'password' => Cryptor::decrypt('7W4pZ98mtUJVOwu5EZkcTbjaG+sm3AuaNAWgBV6C6zXw1CHMSiebpobVnvByQ3XYtyo='),
-                'integrator_id' => '967174xd2CvC'
+                'username' => Cryptor::decrypt('9O5APcc2xkAjFsPRyx8G2Sp0zokWydPaK+kI+e+JlQyLJekCCiFzgycdG8hvbE+4fGhcwzEBmSWD80lql5tMvXs='),
+                'password' => Cryptor::decrypt('ImxYHezOmzM/0KTtTPHZAQvvdX3GgPCRp6o6kVUbCoPkDkFPqIExHvNvWWk/611rbTo13/zj'),
+                'integrator_id' => '936EffectWeb'
             ]
         ];
 

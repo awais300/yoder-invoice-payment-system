@@ -248,6 +248,7 @@ class ExportTransactions extends Singleton
 
         if (empty($csv_data_rows)) {
             $this->logger->log('export()');
+            $this->logger->log($this->result);
             $this->logger->log('No transaction data found.');
             return;
         }

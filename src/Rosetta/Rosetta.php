@@ -60,7 +60,7 @@ class Rosetta extends Singleton
           <xml>
             <ExtSourceID>YODERWEB</ExtSourceID>
             <ARDivisionNo>00</ARDivisionNo>
-            <CustomerNo>0001067</CustomerNo>
+            <CustomerNo>0000015</CustomerNo>
             <AdditionalFields>UDF_CUSTCAT</AdditionalFields>
           </xml>
         </rosetta>";

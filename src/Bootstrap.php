@@ -123,7 +123,11 @@ class Bootstrap
 	public function enqueue_styles()
 	{
 		global $post;
-		if ($post->post_name == Invoice::CUSTOMER_INVOICE_PAGE) {
+		if ($post->post_name == Invoice::CUSTOMER_INVOICE_PAGE || 
+			$post->post_name == Invoice::CUSTOMER_LOGIN_PAGE || 
+			$post->post_name == 'lostpassword' || 
+			$post->post_name == 'resetpass'
+		) {
 			wp_enqueue_style('yips-customization-frontend', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/yips-customization-frontend.css', array(), null, 'all');
 			wp_enqueue_style('yips-w3', YIPS_CUST_PLUGIN_DIR_URL . '/assets/css/w3.css', array(), null, 'all');
 			wp_enqueue_style('wp-jquery-ui-dialog');

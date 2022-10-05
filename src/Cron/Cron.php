@@ -5,6 +5,7 @@ namespace Yoder\YIPS\Cron;
 use Yoder\YIPS\Helper;
 use Yoder\YIPS\Singleton;
 use Yoder\YIPS\Admin\ExportTransactions;
+use Yoder\YIPS\WPLogger;
 
 defined('ABSPATH') || exit;
 
@@ -22,10 +23,18 @@ class Cron extends Singleton
     public const DEFAULT_EMAIL = 'lnelson@yoderoil.com';
 
     /**
+     * Log information to file.
+     *
+     * @var $logger
+     */
+    private $logger = null;
+
+    /**
      * Construct the plugin.
      */
     public function __construct()
     {
+        $this->logger = WPLogger::instance();
         add_action('rest_api_init', array($this, 'yoder_add_csv_endpoint'));
     }
 
@@ -49,6 +58,7 @@ class Cron extends Singleton
      **/
     public function init_export_transactions_csv()
     {
+        $this->logger->log('init_export_transactions_csv()');
         // Same day date so $date would be start date and end date as well.
         $date = date('m/d/Y');
         //$date = '7/12/2022'; // For testing.
@@ -71,7 +81,7 @@ class Cron extends Singleton
         }
 
         $subject = __('YoderOil - Transactions CSV', 'yips-customization');
-        $message = __('Transactions CSV is attached.', 'yips-customization');
+        $message = __('Transactions CSV is attached. If CSV is not attached that means there was no transactions found', 'yips-customization');
         $headers = (Helper::instance())->get_headers_for_email('no-reply@yoderoil.com');
 
         if (file_exists($file_path)) {
@@ -80,6 +90,7 @@ class Cron extends Singleton
             $attachments = '';
         }
 
+        $this->logger->log('Sending csv to email: ' . $to);
         wp_mail($to, $subject, $message, $headers, $attachments);
     }
 }
