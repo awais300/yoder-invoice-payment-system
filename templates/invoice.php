@@ -66,7 +66,7 @@ if ($invoice_obj->has_customer($customer)) {
                 <table class="w3-bordered">
                     <tr class="heading">
                         <td class="all-toggle"><input type="checkbox" id="select-all" name="select-all"><?php _e('Select All', 'yips-customization'); ?></td>
-                        <td><?php _e('Invoice', 'yips-customization'); ?></td>
+                        <td><?php _e('Invoice #', 'yips-customization'); ?></td>
                         <td><?php _e('Due Date', 'yips-customization'); ?></td>
                         <td><?php _e('Amount Due', 'yips-customization'); ?></td>
                     </tr>
@@ -80,7 +80,7 @@ if ($invoice_obj->has_customer($customer)) {
                     ?>
                             <tr class="table-data">
                                 <td><input class="invoice-box" type="checkbox" name="invoice[<?php echo $invoice_num; ?>]" value="<?php echo esc_attr($invoice_amount); ?>" class="invoice"></td>
-                                <td>#<?php echo esc_html($invoice_num); ?></td>
+                                <td><?php echo esc_html($invoice_num); ?></td>
                                 <td><?php echo esc_html($invoice_obj->get_formatted_date($invoice_due_date)); ?></td>
                                 <td><?php echo esc_html($invoice_amount_formatted);  ?></td>
                             </tr>
