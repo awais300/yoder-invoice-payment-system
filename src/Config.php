@@ -37,9 +37,13 @@ class Config extends Singleton
                 'port' => 55555
             ],
             'paytrace' => [
-                'username' => Cryptor::decrypt('9O5APcc2xkAjFsPRyx8G2Sp0zokWydPaK+kI+e+JlQyLJekCCiFzgycdG8hvbE+4fGhcwzEBmSWD80lql5tMvXs='),
+                /*'username' => Cryptor::decrypt('9O5APcc2xkAjFsPRyx8G2Sp0zokWydPaK+kI+e+JlQyLJekCCiFzgycdG8hvbE+4fGhcwzEBmSWD80lql5tMvXs='),
                 'password' => Cryptor::decrypt('ImxYHezOmzM/0KTtTPHZAQvvdX3GgPCRp6o6kVUbCoPkDkFPqIExHvNvWWk/611rbTo13/zj'),
-                'integrator_id' => '936EffectWeb'
+                'integrator_id' => '936EffectWeb',*/
+                
+                'username' => 'awais@effectwebagency.com',
+                'password' => 'TWDKJC@fYY0v',
+                'integrator_id' => '967174xd2CvC',
             ]
         ];
 
