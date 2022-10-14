@@ -30,6 +30,13 @@ class UserMeta extends Singleton
     public const META_CUSTOMER_SAGE_ID = 'yoder_customer_sage_id';
 
     /**
+     * PayTrace customer ID.
+     *
+     * @var META_IS_PAYTRACE_CUSTOMER_CREATED
+     */
+    public const META_IS_PAYTRACE_CUSTOMER_CREATED = 'yoder_is_paytrace_customer_created';
+
+    /**
      * The from email.
      *
      * @var FROM_EMAIL
