@@ -2,6 +2,7 @@
 
 namespace Yoder\YIPS\Invoice;
 
+use Yoder\YIPS\Helper;
 use Yoder\YIPS\PayTrace\PayTrace;
 use Yoder\YIPS\Rosetta\Rosetta;
 use Yoder\YIPS\Singleton;
@@ -109,6 +110,11 @@ class Invoice extends Singleton
         // Rosetta/PDI data.
         $invoices = (Rosetta::instance())->get_due_invoices();
         $customer = (Rosetta::instance())->get_customer();
+
+        // Sort invoices by oldest date first.
+        usort($invoices['invoices'], array($this, 'compare_date'));
+
+
 
         $data = array(
             'invoice_obj' => $this, // Invoice Object.
@@ -240,5 +246,22 @@ class Invoice extends Singleton
     public function get_formatted_date($date)
     {
         return date("M d, Y", strtotime($date));
+    }
+
+    /**
+     * Compare dates to be used in usort.
+     * The parameter will receive array from what 
+     * Sage API returns e.g. InvoiceDueDate
+     *
+     * @param string $b
+     * @param string $b
+     *
+     * @return string
+     * */
+    public function compare_date($a, $b)
+    {
+        $t1 = strtotime($a['InvoiceDueDate']);
+        $t2 = strtotime($b['InvoiceDueDate']);
+        return $t1 - $t2;
     }
 }
