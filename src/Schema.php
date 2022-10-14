@@ -39,7 +39,14 @@ class Schema extends Singleton
          PRIMARY KEY (`id`)) 
         $charset_collate;";
 
+        $alter_sql = "ALTER TABLE `{$table}` 
+        ADD `transaction_id` TEXT NOT NULL AFTER `response`, 
+        ADD `invoices` TEXT NOT NULL AFTER `transaction_id`;";
+
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
+
+        $wpdb->show_errors = false;
+        $wpdb->query($alter_sql);
     }
 }
