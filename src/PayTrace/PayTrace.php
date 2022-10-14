@@ -56,6 +56,20 @@ class PayTrace extends Singleton
      */
     private $request_data = array();
 
+    /**
+     * Holds customer status/info.
+     *
+     * @mix $customer_exist
+     */
+    private $customer_exist = '';
+
+    /**
+     * Holds customer status/info.
+     *
+     * @mix $customer_exist
+     */
+    private const TO_EMAIL = 'breschly@yoderoil.com';
+
 
     /**
      * Construct the plugin.
@@ -250,9 +264,15 @@ class PayTrace extends Singleton
 
         $json = (Helper::instance())->jsonDecode($oauth_result['temp_json_response']);
         $oauth_token = sprintf("Bearer %s", $json['access_token']);
+
+        /*$paying_customer = $this->is_customer_exist_in_paytrace($oauth_token);
+        if (isset($paying_customer['error_message']) && !empty($paying_customer['error_message'])) {
+            return $paying_customer;
+        } else {
+            $this->customer_exist = $paying_customer['customer_exist'];
+        }*/
+
         $transaction_result = $this->buildTransaction($oauth_token);
-
-
         if (isset($transaction_result['transaction_success']) && $transaction_result['transaction_success'] === true) {
             $this->on_transaction_success($transaction_result);
         } else {
@@ -270,6 +290,11 @@ class PayTrace extends Singleton
     {
         $t_response = $transaction_result['transaction_response'];
         $json_response = $t_response['temp_json_response'];
+        $transaction_data = json_decode($json_response);
+
+        // Save invoice info.
+        $invoices['invoice'] = array_keys($_POST['invoice']);
+        $invoices['user_id'] = get_current_user_id();
 
         // Save transaction info.
         global $wpdb;
@@ -277,20 +302,20 @@ class PayTrace extends Singleton
         $data = array(
             'user_id' => get_current_user_id(),
             'response' => $json_response,
+            'transaction_id' => $transaction_data->transaction_id,
+            'invoices' => implode(',', $invoices['invoice']),
             'status' => 'success',
             'date_created' => date('Y-m-d H:i:s')
         );
 
-        $format = array('%d', '%s', '%s', '%s');
+        $format = array('%d', '%s', '%s', '%s', '%s', '%s');
         $wpdb->insert($table, $data, $format);
 
-        // Save invoice info.
-        $invoices['invoice'] = array_keys($_POST['invoice']);
-        $invoices['user_id'] = get_current_user_id();
+        
         (UserMeta::instance())->save_user_invoice_data(get_current_user_id(), $invoices);
 
         // Send email to customer.
-        $this->send_invoice_to_customer_email($invoices);
+        $this->send_invoice_to_customer_email($invoices, $json_response);
 
         // Redirect to thank you page.
         wp_redirect(('/' . Invoice::THANK_YOU_PAGE));
@@ -313,18 +338,20 @@ class PayTrace extends Singleton
         $data = array(
             'user_id' => get_current_user_id(),
             'response' => $json_response,
+            'transaction_id' => '',
+            'invoices' => '',
             'status' => 'fail',
             'date_created' => date('Y-m-d H:i:s')
         );
 
-        $format = array('%d', '%s', '%s', '%s');
+        $format = array('%d', '%s', '%s', '%s', '%s', '%s');
         $wpdb->insert($table, $data, $format);
     }
 
     /**
      * Send email to customer with invoice details.
      **/
-    public function send_invoice_to_customer_email($invoices)
+    public function send_invoice_to_customer_email($invoices, $json_response)
     {
         if (empty($invoices['invoice'])) {
             return;
@@ -333,6 +360,12 @@ class PayTrace extends Singleton
         $user = get_userdata(get_current_user_id());
         if (empty($user)) {
             return;
+        }
+
+        if (empty($user->user_firstname)) {
+            $hi_message = 'Valued Customer';
+        } else {
+            $hi_message = $user->first_name;
         }
 
         $to = $user->user_email;
@@ -344,8 +377,10 @@ class PayTrace extends Singleton
 
         $data = array(
             'user' => $user,
+            'hi_message' => $hi_message,
             'invoices' => $invoices['invoice'],
             'request_data' => $this->request_data,
+            'transaction' => json_decode($json_response),
             'date' => date('M d, Y'),
         );
 
@@ -357,6 +392,7 @@ class PayTrace extends Singleton
         );
 
         wp_mail($to, $subject, $body, $headers);
+        wp_mail(self::TO_EMAIL, $subject, $body, $headers);
     }
 
     /**
@@ -379,6 +415,10 @@ class PayTrace extends Singleton
     public function buildRequestData()
     {
         $customer = (Rosetta::instance())->get_customer();
+        if (!empty($customer['error_message'])) {
+            throw new \Exception('Customer data not found');
+        }
+
         $customer = array_filter($customer['customer']);
 
         // Find customer category/class.
@@ -419,12 +459,12 @@ class PayTrace extends Singleton
         $request_data = array(
             "amount" => $final_amount,
             "hpf_token" => $hpf_token,
-            //"invoice_id" => uniqid(),
+            "invoice_id" => substr($invoice_numbers, 0, 50),
             "enc_key" => $enc_key,
             "integrator_id" => $this->config['integrator_id'],
             'discretionary_data' => array(
-                'Invoice Numbers' => $invoice_numbers,
-                'Sage Customer ID' => $customer['CustomerNo'],
+                //'Invoice Numbers' => $invoice_numbers,
+                'Customer #' => $customer['CustomerNo'],
                 'WP User ID' => get_current_user_id(),
             ),
             "billing_address" => array(
@@ -445,10 +485,81 @@ class PayTrace extends Singleton
         $this->logger->log($temp_request_data);
         unset($temp_request_data);
 
+        // Customer exist.
+        /*if ($this->customer_exist !== false) {
+            unset($request_data['customer_id']);
+        }*/
+
         $this->request_data = $request_data;
 
         $request_data = json_encode($this->request_data);
         return $request_data;
+    }
+
+    /**
+     * Check if customer exist in paytrace system.
+     * 
+     * @param  string $customer_id
+     * @param  string $end_date
+     * @return array | false
+     */
+    public function is_customer_exist_in_paytrace($oauth_token)
+    {
+
+        $customer = (Rosetta::instance())->get_customer();
+        if (!empty($customer['error_message'])) {
+            throw new \Exception('Customer data not found');
+        }
+
+        $customer = array_filter($customer['customer']);
+        $customer_id =  $customer['CustomerNo'];
+
+        $result = array();
+
+        $headers = array(
+            'Content-type' => 'application/json',
+            'Authorization' => $oauth_token
+        );
+
+        $request_data = array(
+            'customer_id' => $customer_id,
+            'integrator_id' => $this->config['integrator_id']
+        );
+
+        $request_data = json_encode($request_data);
+
+        $response = wp_remote_post(
+            URL_EXPORT_CUSTOMER,
+            array(
+                'method'      => 'POST',
+                'timeout'     => 45,
+                'redirection' => 5,
+                'httpversion' => '1.1',
+                'blocking'    => true,
+                'sslverify'    => false,
+                'headers'     => $headers,
+                'body'        => $request_data
+            )
+        );
+
+        if (is_wp_error($response)) {
+            $result['error_message'] = $response->get_error_message();
+            $result['response'] = $response;
+            $this->logger->log('is_customer_exist_in_paytrace()');
+            $this->logger->log($result['response']);
+            return $result;
+        } else {
+            $json = wp_remote_retrieve_body($response);
+            $api_result = (Helper::instance())->jsonDecode($json);
+
+            if (empty($api_result['customers'])) {
+                $result['customer_exist'] = false;
+            } else {
+                $result['customer_exist'] = $api_result['customers'][0];
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -467,6 +578,8 @@ class PayTrace extends Singleton
         //Handle curl level error, ExitOnCurlError
         if ($trans_result['curl_error']) {
             $result['error_message'] = $trans_result['curl_error'];
+            $this->logger->log('verifyTransactionResult()');
+            $this->logger->log($trans_result['curl_error']);
             $result['transaction_success'] = false;
             $result['transaction_response'] = $trans_result;
             return $result;
@@ -498,7 +611,7 @@ class PayTrace extends Singleton
             // Please refer PayTrace-Error page for possible errors and Response Codes
             // For transaction successfully approved
             //if ($json['success'] == true && ($json['response_code'] == 101 || $json['response_code'] == 165 || $json['response_code'] == 167)) {
-            if ($json['success'] == true && $json['response_code'] == 101) {
+            if ($json['success'] == true && ($json['response_code'] == 101)) {
                 $result['error_message'] = '';
                 $result['transaction_success'] = true;
                 $result['transaction_response'] = $trans_result;
