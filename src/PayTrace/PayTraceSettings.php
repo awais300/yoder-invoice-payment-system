@@ -75,5 +75,8 @@ class PayTraceSettings
 
         // URL to get transactions by date range.
         define("URL_EXPORT_BY_DATE_RANGE", BASE_URL . API_VERSION . "/transactions/export/by_date_range");
+
+        // URL to get customer(s)
+        define("URL_EXPORT_CUSTOMER", BASE_URL . API_VERSION . "/customer/export");
     }
 }
