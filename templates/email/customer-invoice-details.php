@@ -1,5 +1,5 @@
 <div id="customer-invoice-email">
-	<p><?php echo $hi_message; ?>,</p>
+	<p>Dear Valued Customer,</p>
 
 	<p>Thank you for paying the following invoice(s):</p>
 	<ul>
@@ -13,4 +13,5 @@
 	<p>Transaction ID: <?php echo $transaction->transaction_id; ?></p>
 	<p>Total Paid: $<?php echo $request_data['amount']; ?></p>
 	<p>Date: <?php echo $date; ?></p>
+	<p>Customer: <?php echo $customer_name; ?></p>
 </div>
