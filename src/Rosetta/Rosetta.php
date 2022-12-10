@@ -41,8 +41,24 @@ class Rosetta extends Singleton
 
         // Debug
         if (@isset($_GET['yoder_api_debug'])) {
-            $test = $this->test();
+            //$test = $this->get_customer();
+            //dd($test);
+            /*$invoices = $this->get_invoices();
+            echo count($invoices['invoices']);
+            dd($invoices);
+
+            if (!isset($invoices['invoices'][0])) {
+                $temp = $invoices['invoices'];
+                $invoices['invoices'] = null;
+                $invoices['invoices'][0] = $temp;
+            }
+            echo count($invoices['invoices']);
+            dd($invoices);
+*/
+
+            /*$test = $this->get_due_invoices();
             dd($test);
+            dd($test['invoices']);*/
             exit();
         }
     }
@@ -60,14 +76,14 @@ class Rosetta extends Singleton
           <xml>
             <ExtSourceID>YODERWEB</ExtSourceID>
             <ARDivisionNo>00</ARDivisionNo>
-            <CustomerNo>0000015</CustomerNo>
+            <CustomerNo>0016954</CustomerNo>
             <AdditionalFields>UDF_CUSTCAT</AdditionalFields>
           </xml>
         </rosetta>";
 
         $response = $this->yoder_remote_get($xml);
 
-        dd($response);
+        //dd($response);
 
         $xml = $response['response'];
         $xml = @simplexml_load_string($xml);
@@ -134,10 +150,18 @@ class Rosetta extends Singleton
     {
         $invoices = $this->get_invoices();
 
+        // Convert to 2D array of invoices if only one invoice found.
+        if (!isset($invoices['invoices'][0])) {
+            $temp = $invoices['invoices'];
+            $invoices['invoices'] = null;
+            $invoices['invoices'][0] = $temp;
+        }
+
         if (!empty($invoices['error_message'])) {
             return $invoices;
         } else {
             foreach ($invoices['invoices'] as $key => $invoice) {
+                //dd($invoice);
                 if ($invoice['Balance'] <= 0) {
                     unset($invoices['invoices'][$key]);
                 }
@@ -147,7 +171,6 @@ class Rosetta extends Singleton
         $invoices = $this->filter_invoices($invoices);
         return $invoices;
     }
-
 
     /**
      * Filter invoices that are already paid.
