@@ -362,10 +362,10 @@ class PayTrace extends Singleton
             return;
         }
 
-        if (empty($user->user_firstname)) {
-            $hi_message = 'Valued Customer';
+        if (empty($this->request_data['billing_address']['name'])) {
+            $hi_message = '';
         } else {
-            $hi_message = $user->first_name;
+            $hi_message = $this->request_data['billing_address']['name'];
         }
 
         $to = $user->user_email;
@@ -377,7 +377,7 @@ class PayTrace extends Singleton
 
         $data = array(
             'user' => $user,
-            'hi_message' => $hi_message,
+            'customer_name' => $hi_message,
             'invoices' => $invoices['invoice'],
             'request_data' => $this->request_data,
             'transaction' => json_decode($json_response),
@@ -594,7 +594,8 @@ class PayTrace extends Singleton
             if ($json['success'] === false) {
                 $this->logger->log('verifyTransactionResult(): $json===false');
                 $this->logger->log($trans_result['response']);
-                $result['error_message'] = __('Transaction Error occurred. Please try again or contact administrator.', 'yips-customization');
+                $result['error_message'] = $json['status_message'];
+                $this->logger->log($result['error_message']);
                 $result['transaction_success'] = false;
                 $result['transaction_response'] = $trans_result;
                 return $result;
